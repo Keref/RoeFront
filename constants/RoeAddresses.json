@@ -11,6 +11,7 @@
       {
         "name": "WETH-USDC",
         "ohlcUrl": "https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=",
+        "chartSymbol": "ETHUSDT",
         "address": "0xD14a7c302051A0F1e9cE8e9a8C4845a45F41B46f",
         "poolId": 0,
         "tvl": "251k",
@@ -53,6 +54,7 @@
       {
         "name": "WETH-USDC",
         "ohlcUrl": "https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=",
+        "chartSymbol": "ETHUSDT",
         "address": "0x4D39CBBf7368a68F62AD1a1a0aB873044A7c5ee1",
         "poolId": 0,
         "tvl": "58k",
@@ -146,6 +148,7 @@
       {
         "name": "WMATIC-USDC",
         "ohlcUrl": "https://api.binance.com/api/v3/klines?symbol=MATICUSDT&interval=",
+        "chartSymbol": "MATICUSDT",
         "address": "0xBfdDD4a965BdB753dcEAA386ED9B19B655407967",
         "poolId": 1,
         "tvl": "0",
@@ -186,6 +189,7 @@
       {
         "name": "WETH-USDC",
         "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
+        "chartSymbol": "ETHUSDT",
         "address": "0x60b3f0C7709075776C38eC5812C8A1EF9fD522d7",
         "poolId": 0,
         "tvl": "95k",
@@ -344,6 +348,7 @@
       {
         "name": "GMX-USDC",
         "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=GMXUSDT&interval=",
+        "chartSymbol": "GMXUSDT",
         "address": "0x79835a8538f111dD5C226b242afa346FF633E5D4",
         "poolId": 2,
         "tvl": "45k",

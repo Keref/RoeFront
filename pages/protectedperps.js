@@ -4,9 +4,10 @@ import { Col, Row, Button, Card, Input, Typography, Spin, Divider } from "antd";
 import VaultPerpsForm from "../components/perps/vaultPerpsForm";
 import Positions from "../components/perps/positions";
 import Infobar from "../components/perps/infobar";
-import Chart from "../components/perps/chart";
+// import Chart from '../components/perps/chart'
 import useAddresses from "../hooks/useAddresses";
 import useCandles from "../hooks/useCandles";
+import { Chart } from "../components/perps/Chart";
 
 // Display all user assets and positions in all ROE LPs
 const ProtectedPerps = () => {
@@ -17,13 +18,14 @@ const ProtectedPerps = () => {
   const ADDRESSES = useAddresses();
   let vaults = ADDRESSES["lendingPools"];
 
-  let intervalBybit = interval;
-  if (interval == "15m") intervalBybit = "15";
-  else if (interval == "1h") intervalBybit = "60";
-  else if (interval == "4h") intervalBybit = "240";
-  else if (interval == "1d") intervalBybit = "D";
+  let intervalBybit = interval
+  if (interval == '15m') intervalBybit = '15'
+  else if (interval == '1h') intervalBybit = '60'
+  else if (interval == '4h') intervalBybit = '240'
+  else if (interval == '1d' ) intervalBybit = 'D'
 
   let candles = useCandles(vaults[currentVault].ohlcUrl + intervalBybit);
+  const chartSymbol = vaults[currentVault].chartSymbol;
 
   useEffect(() => {
     if (candles.length > 0)
@@ -48,12 +50,8 @@ const ProtectedPerps = () => {
           />
         </Card>
         <Chart
-          interval={interval}
-          setInterval={setInterval}
-          candles={candles}
-          positions={positions}
-        />
-        <Positions vaults={vaults} addPosition={addPosition} price={price} />
+          symbol={chartSymbol}
+        /><Positions vaults={vaults} addPosition={addPosition} price={price} />
       </div>
       <div>
         <Card style={{ marginLeft: 24, minWidth: 300 }}>
