@@ -10,7 +10,7 @@
     "lendingPools": [
       {
         "name": "WETH-USDC",
-        "ohlcUrl": "https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
         "chartSymbol": "ETHUSDT",
         "address": "0xD14a7c302051A0F1e9cE8e9a8C4845a45F41B46f",
         "poolId": 0,
@@ -53,7 +53,7 @@
     "lendingPools": [
       {
         "name": "WETH-USDC",
-        "ohlcUrl": "https://api.binance.com/api/v3/klines?symbol=ETHUSDT&interval=",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
         "chartSymbol": "ETHUSDT",
         "address": "0x4D39CBBf7368a68F62AD1a1a0aB873044A7c5ee1",
         "poolId": 0,
@@ -147,7 +147,7 @@
       },
       {
         "name": "WMATIC-USDC",
-        "ohlcUrl": "https://api.binance.com/api/v3/klines?symbol=MATICUSDT&interval=",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=MATICUSDT&interval=",
         "chartSymbol": "MATICUSDT",
         "address": "0xBfdDD4a965BdB753dcEAA386ED9B19B655407967",
         "poolId": 1,
