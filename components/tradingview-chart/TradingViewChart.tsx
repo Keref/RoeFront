@@ -12,8 +12,14 @@ export const TradingViewChart: FC<TradingViewChartProps> = memo(
         theme="dark"
         autosize
         allow_symbol_change={false}
+        hide_top_toolbar={true}
+        hide_side_toolbar={true}
+        save_image={false}
         symbol={symbol}
-      ></BaseTradingViewChart>
+        interval="1"
+        withdateranges={false}
+        calendar={false}
+      />
     </div>
   )
 );

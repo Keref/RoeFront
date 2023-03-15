@@ -18,11 +18,11 @@ const ProtectedPerps = () => {
   const ADDRESSES = useAddresses();
   let vaults = ADDRESSES["lendingPools"];
 
-  let intervalBybit = interval
-  if (interval == '15m') intervalBybit = '15'
-  else if (interval == '1h') intervalBybit = '60'
-  else if (interval == '4h') intervalBybit = '240'
-  else if (interval == '1d' ) intervalBybit = 'D'
+  let intervalBybit = interval;
+  if (interval == "15m") intervalBybit = "15";
+  else if (interval == "1h") intervalBybit = "60";
+  else if (interval == "4h") intervalBybit = "240";
+  else if (interval == "1d") intervalBybit = "D";
 
   let candles = useCandles(vaults[currentVault].ohlcUrl + intervalBybit);
   const chartSymbol = vaults[currentVault].chartSymbol;
@@ -49,9 +49,8 @@ const ProtectedPerps = () => {
             price={price}
           />
         </Card>
-        <Chart
-          symbol={chartSymbol}
-        /><Positions vaults={vaults} addPosition={addPosition} price={price} />
+        <Chart symbol={chartSymbol} />
+        <Positions vaults={vaults} addPosition={addPosition} price={price} />
       </div>
       <div>
         <Card style={{ marginLeft: 24, minWidth: 300 }}>
