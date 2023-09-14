@@ -561,7 +561,7 @@ const DepositWithdrawalTickerModal = ({
           ) : null}
 
           <Button
-            type={isSpinning ? "default" : "primary"}
+            type="default"
             style={{ width: "100%", marginTop: 12 }}
             onClick={() => goTxGo(action)}
             disabled={

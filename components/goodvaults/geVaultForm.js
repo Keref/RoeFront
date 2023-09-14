@@ -175,7 +175,7 @@ const GeVaultForm = ({vault, gevault}) => {
       </Button>
     ) : (
       <Button
-        type="primary"
+        type="default"
         onClick={()=>{direction == "Deposit" ? deposit() : withdraw()}}
         disabled={isButtonDisabled}
          style={{ width: "100%" }}

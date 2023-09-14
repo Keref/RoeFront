@@ -275,7 +275,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
           </Button>
         ) : (
           <Button
-            type="primary"
+            type="default"
             onClick={openPosition}
             disabled={isOpenPositionButtonDisabled}
             danger={direction == "Short"}
