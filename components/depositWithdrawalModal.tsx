@@ -169,25 +169,24 @@ const DepositWithdrawalModal = ({
             setAction(activeKey);
           }}
           items={[
-            // TODO Withdraw issue incident 12.09.2023
-            // {
-              // label: (
-              //   <span style={{ width: "50%" }}>
-              //     <UploadOutlined />
-              //     Supply {useEth ? "ETH" : asset.name}
-              //   </span>
-              // ),
-              // key: "Supply",
-            // },
-            // {
-            //   label: (
-            //     <span style={{ width: "50%" }}>
-            //       <DownloadOutlined />
-            //       Withdraw {useEth ? "ETH" : asset.name}
-            //     </span>
-            //   ),
-            //   key: "Withdraw",
-            // },
+            {
+              label: (
+                <span style={{ width: "50%" }}>
+                  <UploadOutlined />
+                  Supply {useEth ? "ETH" : asset.name}
+                </span>
+              ),
+              key: "Supply",
+            },
+            {
+              label: (
+                <span style={{ width: "50%" }}>
+                  <DownloadOutlined />
+                  Withdraw {useEth ? "ETH" : asset.name}
+                </span>
+              ),
+              key: "Withdraw",
+            },
           ]}
         />
 

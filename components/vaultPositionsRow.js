@@ -40,7 +40,14 @@ const VaultPositionsRow = ({ assetAddress, vault, hideEmpty }) => {
     { key: "action", dataIndex: "action", title: "Action" },
   ];
 
-  if (asset.type == "single")
+  // TODO Withdraw issue incident 12.09.2023
+  if (true) {
+    asset.depositedAction = (
+        <Button disabled size="small">
+          Deposit / Withdraw
+        </Button>
+    );
+  } else if (asset.type == "single") {
     asset.depositedAction = (<>
       <DepositWithdrawalModal
         asset={asset}
@@ -53,6 +60,7 @@ const VaultPositionsRow = ({ assetAddress, vault, hideEmpty }) => {
       </Button>
     </>
     );
+  }
   else if (asset.type == "ticker") {
     asset.depositedAction = (
     <>

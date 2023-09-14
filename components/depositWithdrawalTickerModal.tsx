@@ -290,16 +290,15 @@ const DepositWithdrawalTickerModal = ({
               ),
               key: "Supply",
             },
-            // TODO Withdraw issue incident 12.09.2023
-            // {
-            //   label: (
-            //     <span style={{ width: "50%" }}>
-            //       <DownloadOutlined />
-            //       Withdraw from {asset.name}
-            //     </span>
-            //   ),
-            //   key: "Withdraw",
-            // },
+            {
+              label: (
+                <span style={{ width: "50%" }}>
+                  <DownloadOutlined />
+                  Withdraw from {asset.name}
+                </span>
+              ),
+              key: "Withdraw",
+            },
           ]}
         />
 
