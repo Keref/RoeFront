@@ -256,6 +256,7 @@ const DepositWithdrawalModalMultiAssets = ({ vault }) => {
               !inputValue ||
               parseFloat(inputValue) == 0 ||
               parseFloat(inputValue) > parseFloat(assetBal)
+              || actionComponent == "Deposit"
             }
           >
             {isSpinning ? <Spin /> : <>{actionComponent}</>}
