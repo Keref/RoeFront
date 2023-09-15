@@ -3,7 +3,7 @@
     "network": "Arbitrum",
     "roeRouter": "0x5430A027CC128c7fcC2208Fd78E56Aa0EBF083F2",
     "rangerPositionManager": "0x0Fc3995715E30d610FD42b6E54cA80C9d490bf27",
-    "optionsPositionManager": "0x12aec108C1959EEdfFAf894Ca466e2F5B31ccc9e",
+    "optionsPositionManager": "0x1c773788E63BFb32171030fF219da5F66F2afbb7",
     "longgPositionManager": "0x1056b5664341487679d5B68854249318693dc53D",
     "zapbox": "0xB90240106d7Fcff6566ab83299D90d81753eA19c",
     "zapboxTR": "0x92b7F147fEB5Ac205068f3760D40161479B49bF1",
@@ -17,7 +17,7 @@
         "address": "0x1259F436D981c1DA8b279205b5dc405B1f6Bf80b",
         "uniswapPool": "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443",
         "tvSymbol" : "BYBIT:ETHUSDC",
-        "poolId": 16,
+        "poolId": 2,
         "tvl": "95k",
         "rangeManager": "0x172EE56600B2Df3fDBFCC3e2F968E60a333dc3C4",
         "geVault": [
@@ -249,7 +249,7 @@
         "address": "0x06e81a9d8b9BDF50A48666a90c03Dd1Ed0e12eeb",
         "uniswapPool": "0xcda53b1f66614552f834ceef361a8d12a0b8dad8",
         "tvSymbol" : "BYBIT:ARBUSDC",
-        "poolId": 18,
+        "poolId": 8,
         "tvl": "45k",
         "rangeManager": "0xA9227643f940d412ebC019D99219677EbbE5Aa2f",
         "geVault": [
@@ -489,7 +489,7 @@
         "address": "0x714dBe5C00b99f9AC220b45124568d047CB56E62",
         "uniswapPool": "0xac70bd92f89e6739b3a08db9b6081a923912f73d",
         "tvSymbol" : "BYBIT:BTCUSDC",
-        "poolId": 21,
+        "poolId": 10,
         "tvl": "45k",
         "rangeManager": "0x1129950143BDE0252f39345FA80643213D394208",
         "geVault": [
@@ -672,7 +672,7 @@
         "address": "0x25f1fEB4de0AC6A6421Ac211949e771c1b3C85bc",
         "uniswapPool": "0xbed2589fefae17d62a8a4fdac92fa5895cae90d2",
         "tvSymbol": "BYBIT:GMXUSDT",
-        "poolId": 13,
+        "poolId": 5,
         "tvl": "45k",
         "rangeManager": "0x8a5b3e5aC3bd5c5c80d875C2b89Ec5980F326FA6",
         "geVault": [
