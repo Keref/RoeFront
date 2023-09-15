@@ -41,7 +41,9 @@ const GeVaultForm = ({vault, gevault}) => {
     else balance = assetData.wallet
   }
 
-  const isButtonDisabled = !inputValue || parseFloat(inputValue) > balance || (geVault.status == "Withdraw Only" && direction == "Deposit") || chainId != 42161
+  const isButtonDisabled = !inputValue || parseFloat(inputValue) > balance || (geVault.status == "Withdraw Only" && f == "Deposit") || chainId != 42161
+  // TODO Withdraw issue incident 12.09.2023
+  || true
     
   const deposit = async () => {
     setSpinning(true);
@@ -173,7 +175,7 @@ const GeVaultForm = ({vault, gevault}) => {
       </Button>
     ) : (
       <Button
-        type="primary"
+        type="default"
         onClick={()=>{direction == "Deposit" ? deposit() : withdraw()}}
         disabled={isButtonDisabled}
          style={{ width: "100%" }}
