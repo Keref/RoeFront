@@ -239,6 +239,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
     aboveMargin ||
     hasReverseStrike ||
     belowMin;
+  console.log('isDisabled', !strike.price, isSpinning, parseFloat(inputValue) == 0, parseFloat(inputValue) > maxOI, aboveMargin, hasReverseStrike, belowMin)
 
   let openPositionButtonErrorTitle = "...";
 
