@@ -238,7 +238,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
     parseFloat(inputValue) > maxOI ||
     aboveMargin ||
     hasReverseStrike ||
-    belowMin;
+    belowMin || true;
 
   let openPositionButtonErrorTitle = "...";
 
@@ -364,10 +364,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
                 title="Estimated Hourly Funding"
                 style={{ border: "1px solid blue"}}
                 content={
-                  <div style={{ width: 250 }}>
-                    Borrow interest + Avg 7d tick swap fees<br /><br />
-                    Be careful as swap fees can be high if price chops around strike!
-                  </div>
+                  <div style={{ width: 250 }}>Funding is the borrowing interest rate.</div>
                 }
               >
                 <QuestionCircleOutlined />
