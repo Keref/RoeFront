@@ -4,17 +4,17 @@ import { Card, Col, Popover, Button } from "antd";
 import { ethers } from "ethers";
 import MigrationVault_ABI from "../../contracts/MigrationVault.json";
 import useContract from "../../hooks/useContract";
+import { useWeb3React } from "@web3-react/core";
 
 const MigrationBox = ({vault, sourceGeVaultAddress, targetGeVault}) => {
+  const { account } = useWeb3React();
   const [sourceVaultBal, setSourceVaultBal] = useState(0);
-  var tp = new ethers.providers.JsonRpcProvider("http://localhost:8545") 
-  const signer = tp.getSigner()
-  const cs = new ethers.Contract("0x955573549C68302725da4D70a4B225aca1270193", MigrationVault_ABI, signer)
-  const svault = useGeVault(vault, {address: sourceGeVaultAddress});
-  console.log(vault, svault)
+  const migrationVault = useContract("0xf350e47D1db625DA9cfa3A362A13839A550B15Ab", MigrationVault_ABI);
+  const sourceVault = useGeVault(vault, {address: sourceGeVaultAddress});
+  console.log("Source:", sourceVault, "Target:", targetGeVault)
   
   const migrate = async () => {
-
+    console.log("Migrate liquidity from", sourceVault.address, "to", targetGeVault.address)
     /* we try to migrate, 3 cases
       - can use token0 (enough token0 is available)
       - if it failsm try with token1
@@ -22,11 +22,29 @@ const MigrationBox = ({vault, sourceGeVaultAddress, targetGeVault}) => {
     */
     const subMigrate = async (usedToken) => {
       try {
-        console.log('migrate with token', usedToken);
-        
+        console.log('Migrate with token', usedToken);
+        // check approval
+        let result;
+        result = await sourceVault.contract.allowance(account, migrationVault.address);
+        if (result.lt(ethers.utils.parseUnits(sourceVault.wallet, 18))) {
+          console.log("Approve Migration contract");
+          result = await sourceVault.contract.approve(
+            migrationVault.address,
+            ethers.constants.MaxUint256
+          );
+          // loop waiting for allowance to be ready
+          for (let k = 0; k< 20; k++){
+            let allowance = await sourceVault.contract.allowance(account, migrationVault.address);
+            if ( allowance.gte(ethers.utils.parseUnits(sourceVault.wallet, 18)) ) break;
+            await delay(2000);
+          }
+        }
+        // migrate - use 0 as amount to migrate all
+        result = await migrationVault.migrate(0, usedToken, sourceVault.address, targetGeVault.address)
         return true;
       }
       catch(e){
+        console.log(e)
         return false;
       }
     }
@@ -37,7 +55,7 @@ const MigrationBox = ({vault, sourceGeVaultAddress, targetGeVault}) => {
     // if(!res) // migration failed
     
   }
-  if (svault.wallet == 0) return <></>
+  if (sourceVault.wallet == 0) return <></>
   
   return(<Card style={{marginLeft: 64, color: 'white', marginBottom: 24 }} >
       <h4>Migrate old liquidity</h4>
