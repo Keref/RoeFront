@@ -238,7 +238,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
     parseFloat(inputValue) > maxOI ||
     aboveMargin ||
     hasReverseStrike ||
-    belowMin || true;
+    belowMin;
 
   let openPositionButtonErrorTitle = "...";
 
@@ -260,7 +260,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
   // BlackScholes
   // on the daily options deribit volatility sells for half the weekly HVOL ?
   var hvol = useTokenHVol(vault.ohlcUrl)
-  var rfr = 0.045;
+  var rfr = 0.053;
   const bsUpperStrike = bs.blackScholes(price, upperStrikeAsset.price, 1/365, hvol, rfr, "call");
   const bsLowerStrike = bs.blackScholes(price, lowerStrikeAsset.price, 1/365, hvol, rfr, "put");
   
@@ -460,7 +460,7 @@ const VaultPerpsForm = ({ vault, price, opmAddress, checkPositions, positions })
       />
     </Card>
     <Card style={{ minWidth: 343, marginTop: 12 }}>
-      <span style={{fontWeight: 600, color: 'white'}}>{baseAsset.name} 7d HVOL<span style={{ float: 'right'}}>{(hvol * 100).toFixed(2)}%</span></span> 
+      <span style={{fontWeight: 600, color: 'white'}}>{baseAsset.name} 30d HVOL<span style={{ float: 'right'}}>{(hvol * 100).toFixed(2)}%</span></span> 
       <br />
       Theoretical 1DTE price<span style={{float: 'right'}}>Current</span><br/>
       Call-{upperStrikeAsset.price}: ${(bsUpperStrike).toFixed(3)}<span style={{float: 'right'}}>${(upperStrikeAsset.debtApr/100/365*price).toFixed(3)}</span><br />
