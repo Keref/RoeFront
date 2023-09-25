@@ -42,8 +42,6 @@ const GeVaultForm = ({vault, gevault}) => {
   }
 
   const isButtonDisabled = !inputValue || parseFloat(inputValue) > balance || (geVault.status == "Withdraw Only" && f == "Deposit") || chainId != 42161
-  // TODO Withdraw issue incident 12.09.2023
-  || true
     
   const deposit = async () => {
     setSpinning(true);
