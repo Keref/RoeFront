@@ -22,7 +22,7 @@ const GeVaultBox = ({vault, gevault}) => {
     if (value < 1e9) return (value / 1000).toFixed(0) + "M";
   };
   
-  if (!gevault.address || !vault.geVault || gevault.name.slice(-2) == "v2") return <></>  
+  if (!gevault.address || !vault.geVault ) return <></>  
   
   const RewardsTag = () => {
     return (<div style={{backgroundColor: "#0A371B", color: theme.colorPrimary, borderRadius: 4, padding: "6px 8px", display: 'flex', alignItems: 'center', fontWeight: 600, fontSize: "smaller" }}>
