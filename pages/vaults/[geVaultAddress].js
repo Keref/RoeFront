@@ -129,7 +129,7 @@ const GeVaults = ({}) => {
         xs={24}
       >
         { /* From v1 ETH-USDC to v2 */
-          gevault.address == "0x41d0ebb0f0bcf7a06e395d0551cc695e4318594d" 
+          gevault.address == "0x41D0ebB0F0Bcf7A06E395D0551Cc695e4318594d" 
             ? <MigrationBox vault={vault} sourceGeVaultAddress="0x0d3cAA624E3a0076A6bc96Ba8D632D37F460Bc74" targetGeVault={gevault} /> 
             : <></>
         }
