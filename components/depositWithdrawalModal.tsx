@@ -251,7 +251,7 @@ const DepositWithdrawalModal = ({
             disabled={
               !inputValue ||
               parseFloat(inputValue) == 0 ||
-              parseFloat(inputValue) > parseFloat(availableBal) || true
+              parseFloat(inputValue) > parseFloat(availableBal)
             }
           >
             {isSpinning ? <Spin /> : <>{actionComponent}</>}

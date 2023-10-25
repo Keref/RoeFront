@@ -567,7 +567,7 @@ const DepositWithdrawalTickerModal = ({
               isSpinning ||
               !inputValue ||
               parseFloat(inputValue) == 0 ||
-              parseFloat(availableBal) < parseFloat(inputValue) || true
+              parseFloat(availableBal) < parseFloat(inputValue)
             }
           >
             {isSpinning ? <Spin /> : <>{actionComponent}</>}
