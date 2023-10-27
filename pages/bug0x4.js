@@ -44,7 +44,7 @@ function Bug0x4() {
   }
 
   return (<div style={{ minWidth: 1200, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-    <Typography.Title>GoodEntry Public Sale</Typography.Title>
+    <Typography.Title>Withdraw from ETH-1800</Typography.Title>
     <Row style={{ width: 1200}} gutter={24}>
       <Col md={12}>
         <Card title="Bug resolution">
