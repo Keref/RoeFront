@@ -10,6 +10,7 @@
     "priceOracle": "0x8A4236F5eF6158546C34Bd7BC2908B8106Ab1Ea1",
     "wethGateway": "0x090E950666D3F2c5cf7fc98135D94287c83E0a85",
     "migrateVault": "0xf350e47D1db625DA9cfa3A362A13839A550B15Ab",
+    "strikeManager": "0xAd6B6f5CC3D92b153298aB731C7D7084ABB362fC",
     "lendingPools": [
       {
         "name": "WETH-USDC.e",
@@ -73,6 +74,8 @@
       },
       {
         "name": "ARB-USDC.e",
+        "positionManagerV2": "0x46f423b7390480A506c73E17b9f0adA5E0c346A5",
+        "vaultV2": "0x5ED64eB01d60C3Fe951cbee3b72AB08B50Fe5c0F",
         "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ARBUSDT&interval=",
         "address": "0x06e81a9d8b9BDF50A48666a90c03Dd1Ed0e12eeb",
         "uniswapPool": "0xcda53b1f66614552f834ceef361a8d12a0b8dad8",
@@ -116,6 +119,16 @@
             "tokenId": 404487
           }
         ],
+        "baseToken": {
+          "name": "ARB",
+          "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
+          "decimals": 18
+        },
+        "quoteToken": {
+          "name": "USDC.e",
+          "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+          "decimals": 6
+        },
         "token0": {
           "name": "ARB",
           "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
