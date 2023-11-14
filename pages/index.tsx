@@ -1,11 +1,9 @@
-import Link from "next/link";
-import { Table, Button, Card, Typography } from 'antd';
-import ProtectedPerps from './protectedperps';
+import PerpsV2 from './perpsv2';
 
 
 function Index() {
-return (
-    <ProtectedPerps />
+  return (
+    <PerpsV2 />
   );
 }
 
