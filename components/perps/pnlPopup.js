@@ -42,7 +42,7 @@ const downloadImage = (blob, fileName) => {
         footer={null}
       >
       <div id="sharePnl"  ref={exportRef} style={{ padding: 16, backgroundImage: 'url("/images/GEspaceBG.png")' }}>
-        <img src="/Good Entry Logo.svg" height={28}/>
+        <img src="/Good Entry Logo.svg" height={28} alt="Good PnL!" />
         <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
           <span style={{ fontSize: 'x-large', fontWeight: 600 }}>{token0.name}-USDC</span>
           <div style={{ backgroundColor: direction == "short" > 0 ? "#55d17c" : "#e57673", color: 'white', borderRadius: 4, padding: 2, fontSize: 'x-small' }}>

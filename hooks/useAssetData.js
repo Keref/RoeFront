@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import useAddresses from "./useAddresses";
 import useTokenBalance from "./useTokenBalance";
 import useTokenContract from "./useTokenContract";
-import usePriceOracle from "./usePriceOracle";
+import useOraclePrice from "./useOraclePrice";
 import useGoodStats from "./useGoodStats";
-import useLendingPoolContract from "./useLendingPoolContract";
 import { ethers } from "ethers";
 
 /// Get an array with all data related to a symbol, eg USDC or ETH, including user balances and pool balance
@@ -27,7 +26,7 @@ export default function useAssetData(address, vaultAddress) {
   // if vault Address not defined, happens sometimes like with tx history
   if (ADDRESSES["lendingPools"].length > 1){
     for (let k of ADDRESSES["lendingPools"]){
-      if(k.token0.address == address) {
+      if(k.baseToken.address == address) {
         lp = k; break;
       }
     }
@@ -70,7 +69,7 @@ export default function useAssetData(address, vaultAddress) {
     ...asset,
   };
 
-  const oracle = usePriceOracle();
+  const oracle = useOraclePrice(lp);
   const getPrice = async () => {
     if (!oracle || !address) return;
     try {
@@ -92,45 +91,6 @@ export default function useAssetData(address, vaultAddress) {
     }
   };
   getAssetData();
-
-  // get token supply = TVL
-  const getRoeSupply = async () => {
-    try {
-      var data = await roeToken.totalSupply();
-      setRoeTotalSupply(ethers.utils.formatUnits(data, asset.decimals));
-      data = await roeToken.balanceOf(account);
-      setDeposited(ethers.utils.formatUnits(data, asset.decimals));
-    } catch (e) {
-      //console.error
-    }
-  };
-  getRoeSupply();
-
-  const debtContract = useTokenContract(asset.debtAddress);
-  const getDebtAmount = async () => {
-    if (!asset.debtAddress || !debtContract) return;
-    try {
-      var data = await debtContract.balanceOf(account);
-      setDebt(ethers.utils.formatUnits(data, asset.decimals));
-    } catch (e) {
-      //console.log('Get debt error', e,debtContract, account )
-    }
-  };
-  getDebtAmount();
-
-  // Get variable debt/supply rates
-  const lpContract = useLendingPoolContract(lp.address);
-  const getVariableRate = async () => {
-    if (!asset || !asset.address || !lp.address || !lpContract) return;
-    try {
-      var data = await lpContract.getReserveData(asset.address);
-      setVariableRate((data.currentVariableBorrowRate / 1e25).toFixed(2));
-      setSupplyRate((data.currentLiquidityRate / 1e25).toFixed(2));
-    } catch (e) {
-      //console.log('Get variable rate', e, asset.address)
-    }
-  };
-  getVariableRate();
 
   {
     const { data } = useTokenBalance(account, asset.address);

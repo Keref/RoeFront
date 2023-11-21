@@ -14,12 +14,12 @@ const Positions = ({ vault }) => {
   //const history = usePositionsHistory(account, refresh);
   let positions = usePositionsV2(account, vault.positionManagerV2)
   console.log('positions', positions)
-  let price = useOraclePrice(vault.baseToken.address);
+  let price = useOraclePrice(vault);
   
   return (<>
     {
       positions.map((position)=>{
-        return <PositionsRowV2 position={position} vault={vault} price={price} />
+        return <PositionsRowV2 key={vault.address} position={position} vault={vault} price={price} />
       })
     }
     </>)

@@ -32,7 +32,7 @@ const PerpsV2 = () => {
     textDecorationLine: 'underline'
   }
 
-  let price = useOraclePrice(vaults[currentVault].baseToken.address);
+  let price = useOraclePrice(vaults[currentVault]);
 
   return (
     <div style={{ minWidth: 1400, display: "flex", flexDirection: "row" }}>
@@ -78,7 +78,7 @@ const PerpsV2 = () => {
                         {
                           vaults.map( vault => {
                             return (
-                              <Positions vault={vault} />
+                              <Positions key={vault.address} vault={vault} />
                             )
                           })
                         }
@@ -106,7 +106,7 @@ const PerpsV2 = () => {
                         {
                           vaults.map( vault => {
                             return (
-                              <PositionsHistory account={account} vault={vault}/>
+                              <PositionsHistory key={vault.address} account={account} vault={vault}/>
                             )
                           })
                         }

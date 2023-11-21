@@ -1,5 +1,4 @@
 import useAssetData from "../../hooks/useAssetData";
-import useUnderlyingAmount from "../../hooks/useUnderlyingAmount";
 import ClosePositionButton from "./closePositionButton";
 import useAddresses from "../../hooks/useAddresses";
 import PnlPopup from  "./pnlPopup.js";

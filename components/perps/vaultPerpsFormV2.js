@@ -79,7 +79,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
       setFundingRate(100 * optionPriceX8 / 6 / 1e8);
     }
     if (price > 0) getData()
-  }, [positionSize, price])
+  }, [positionSize, price,  isCall, pmContract, strikeX8, vault.baseToken.decimals, vault.quoteToken.decimals])
 
 
   const openPosition = async () => {

@@ -1,5 +1,5 @@
 import usePositionsHistory from "../../hooks/usePositionsHistory";
-
+import HistoryTx from "./historyTx";
 
 const PositionsHistory = ({ account, vault, refresh }) => {
   

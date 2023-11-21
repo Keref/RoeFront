@@ -9,7 +9,7 @@ export default function VaultsDropdown({vaults, selectVault, currentVault, size}
     <div className="dropdownPerp">
     <Button type="text" style={{ padding: "4px 0px 0px 0px"}} size={size?'large':'default'}>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img src={"/icons/"+currentVault.name.toLowerCase()+".svg"} height={32} width={64} />
+        <img src={"/icons/"+currentVault.name.toLowerCase()+".svg"} height={32} width={64} alt={currentVault.name.toLowerCase()} />
         <span style={{ fontWeight: 600, fontSize: size || 'large', color: 'white'}}>
         {currentVault.name}</span> <DownOutlined style={{ fontSize: size?"large":"default", marginLeft: 16}} />
       </div>
@@ -19,7 +19,7 @@ export default function VaultsDropdown({vaults, selectVault, currentVault, size}
       {
         vaults.map( (v, index) => <Button key={v.name} style={{ textAlign: 'left', color: 'white'}} type="text" onClick={()=>selectVault(index)}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={"/icons/"+v.name.toLowerCase()+".svg"} height={24} width={48} />
+            <img src={"/icons/"+v.name.toLowerCase()+".svg"} height={24} width={48} alt={v.name.toLowerCase()} />
             {v.name}
           </div>
         </Button> )
