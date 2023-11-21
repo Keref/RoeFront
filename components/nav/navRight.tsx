@@ -20,20 +20,6 @@ const NavRight = () => {
   return (
     <div style={{ display: "flex", alignItems: "center", fontWeight: 600 }}>
       <a
-        href="https://crew3.xyz/c/goodentrylabs/questboard"
-        target="_blank"
-        rel="noreferrer"
-        style={{ marginRight: 24, color: "#8A9098" }}
-      >
-        Quests
-      </a>
-      <Link
-        href="/leaderboard"
-        style={{ marginRight: 24, color: "#8A9098" }}
-      >
-        <TrophyOutlined style={{ fontSize: "larger" }} />
-      </Link>
-      <a
         href="https://discord.com/invite/goodentry"
         target="_blank"
         rel="noreferrer"
@@ -58,14 +44,13 @@ const NavRight = () => {
         <MediumOutlined style={{ fontSize: "larger"}} />
       </a>
       <a
-        href="https://github.com/GoodEntry-io/GoodEntryMarkets"
+        href="https://github.com/GoodEntry-io/"
         target="_blank"
         rel="noreferrer"
         style={{ marginRight: 24, color: "#8A9098" }}
       >
         <GithubOutlined style={{ fontSize: "larger"}} />
       </a>
-      <Rewards />
       <NavChain />
       <Account triedToEagerConnect={triedToEagerConnect} />
     </div>

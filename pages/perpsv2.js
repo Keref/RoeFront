@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { Col, Row, Button, Card, Input, Typography, Spin, Divider } from "antd";
+import { Col, Row, Button, Card, Input, Typography, Spin, Tabs, Tooltip } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 import VaultPerpsFormV2 from "../components/perps/vaultPerpsFormV2";
 import Positions from "../components/perps/positions";
+import PositionsHistory from "../components/perps/positionsHistory"
 import Infobar from "../components/perps/infobar";
 import Chart from "../components/perps/chart";
 import TradingViewWidget from "../components/perps/tv";
 import useAddresses from "../hooks/useAddresses";
-import useUniswapPrice from "../hooks/useUniswapPrice";
-import usePositionsHistory from "../hooks/usePositionsHistory";
+import useOraclePrice from "../hooks/useOraclePrice";
 import useTheme from "../hooks/useTheme";
 import { useWeb3React } from "@web3-react/core";
 
@@ -17,41 +18,21 @@ const PerpsV2 = () => {
   const { account} = useWeb3React();
   const theme = useTheme()
   // only works for ARB in testing no other vault
-  const [currentVault, selectVault] = useState(1);
-  const [positions, setPositions] = useState([]);
-  const [interval, setInterval] = useState("1h");
+  const [currentVault, selectVault] = useState(0);
   const [refreshCounter, setRefreshCounter] = useState(0);
   const ADDRESSES = useAddresses();
-  const history = usePositionsHistory(account, refreshCounter);
   const gap = 12;
   let vaults = ADDRESSES["lendingPools"];
-
-  let intervalBybit = interval;
-  if (interval == "15m") intervalBybit = "15";
-  else if (interval == "1h") intervalBybit = "60";
-  else if (interval == "4h") intervalBybit = "240";
-  else if (interval == "1d") intervalBybit = "D";
-
-  let price = useUniswapPrice(
-    vaults[currentVault].uniswapPool,
-    vaults[currentVault].token0.decimals - vaults[currentVault].token1.decimals
-  );
-
-  const checkPositions = () => {
-    setRefreshCounter(refreshCounter+1)
-    const positionsData = JSON.parse( localStorage.getItem("GEpositions") ?? '{}' );
-    if ( positionsData && positionsData[account] ) {
-      let pos = [];
-      for(let k of Object.keys(positionsData[account]['opened']) )
-        pos.push(positionsData[account]['opened'][k])
-      setPositions(pos)
-    }
+  const thStyle = {
+    color: "#94A3B8",
+    fontWeight: 500,
+    textDecorationStyle: "dotted",
+    textDecorationStyle: 'dotted', 
+    textDecorationColor: 'grey',
+    textDecorationLine: 'underline'
   }
 
-  useEffect( () => {
-    checkPositions()
-  }, [account])
-  
+  let price = useOraclePrice(vaults[currentVault].baseToken.address);
 
   return (
     <div style={{ minWidth: 1400, display: "flex", flexDirection: "row" }}>
@@ -65,10 +46,76 @@ const PerpsV2 = () => {
           />
         </Card>
         <TradingViewWidget
-          positions={positions}
           symbol={vaults[currentVault].tvSymbol}
         />
-        <Positions vaults={vaults} vault={vaults[currentVault]} positions={positions} checkPositions={checkPositions} price={price} refresh={refreshCounter} />
+        <Card style={{ marginTop: 8 }}>
+          <Tabs
+            defaultActiveKey="Positions"
+
+            items={[
+              {
+                label: "Positions",
+                key: "Positions",
+                children: <>
+                    <table border={0}>
+                      <thead>
+                        <tr>
+                          <th align="left" style={{...thStyle, paddingLeft: 0}}>Instrument</th>
+                          <th align="left" style={thStyle}>Side</th>
+                          <th align="left" style={thStyle}>Size</th>
+                          <th align="left" style={thStyle}>
+                            Funding{" "}
+                            <Tooltip placement="right" title="Hourly funding rate">
+                              <QuestionCircleOutlined />
+                            </Tooltip>
+                          </th>
+                          <th align="left" style={thStyle}>Entry Price</th>
+                          <th align="left" style={thStyle}>PNL&nbsp;&nbsp;</th>
+                          <th align="left" style={{...thStyle, paddingRight: 0}}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          vaults.map( vault => {
+                            return (
+                              <Positions vault={vault} />
+                            )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                  </>
+                },
+                {
+                  label: "History",
+                  key: "History",
+                  children: <table border={0}>
+                      <thead>
+                        <tr>
+                          <th align="left" style={{...thStyle, paddingLeft: 0}}>Date</th>
+                          <th align="left" style={thStyle}>Tx</th>
+                          <th align="left" style={thStyle}>Instrument</th>
+                          <th align="left" style={thStyle}>Action</th>
+                          <th align="left" style={thStyle}>Change Base</th>
+                          <th align="left" style={thStyle}>Change Quote</th>
+                          <th align="left" style={thStyle}>Change Debt</th>
+                          <th align="left" style={thStyle}>PNL&nbsp;&nbsp;</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          vaults.map( vault => {
+                            return (
+                              <PositionsHistory account={account} vault={vault}/>
+                            )
+                          })
+                        }
+                      </tbody>
+                    </table>
+                },
+              ]}
+            />
+        </Card>
       </div>
       <div style={{ width: 343, marginLeft: gap}}>
         <VaultPerpsFormV2

@@ -3,7 +3,7 @@ import { Modal, Divider } from "antd";
 import { TwitterOutlined, DownloadOutlined } from "@ant-design/icons";
 import html2canvas from "html2canvas";
 
-const PnlPopup = ({ direction, price, token0, pnl, pnlPercent, entry, children }) => {
+const PnlPopup = ({ direction, price, token0, pnl, pnlPercent, strike, children }) => {
   const [pnlModalVisible, setPnlModalVisible] = useState();
   const exportRef = useRef();
   
@@ -57,7 +57,7 @@ const downloadImage = (blob, fileName) => {
         <div style={{ display: 'flex', alignItems: 'center', gap: 36, marginTop: 12}}>
           <div>
             Entry<br />
-            ${entry.toFixed(2)}
+            ${strike}
           </div>
           <div>
             Market Price<br />

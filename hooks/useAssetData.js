@@ -40,37 +40,10 @@ export default function useAssetData(address, vaultAddress) {
 
   // will fail with Error: Rendered more hooks than during the previous render. if the asset address isnt found here, since it would skip some hooks
   if (lp.address) {
-    if (address == lp["token0"].address)
-      asset = { type: "single", ...lp.token0 };
-    else if (address == lp["token1"].address)
-      asset = { type: "single", ...lp.token1 };
-    else if (address == lp["lpToken"].address)
-      asset = { type: "lpv2", ...lp.lpToken };
-    else {
-      // loop on ranges
-      for (let k of lp.ranges)
-        if (typeof address == "string" && address && k.address && address.toLowerCase() == k.address.toLowerCase())
-          asset = { type: "ranger", name: "Range-" + k.price, ...k };
-      // loop on ticks
-      for (let k of lp.ticks)
-        if (typeof address == "string" && address && k.address && address.toLowerCase() == k.address.toLowerCase()) {
-          asset = {
-            type: "ticker",
-            name: "Ticker-" + k.price,
-            tokenId: k.tokenId,
-            icon: "/icons/" + lp.name.toLowerCase() + ".svg",
-            ...k,
-          };
-        }
-      // loop on gevaults
-      for (let k of lp.geVault)
-        if (typeof address == "string" && address && k.address && address.toLowerCase() == k.address.toLowerCase()) {
-          asset = k;
-          asset.type = "geVault"
-          asset.name = "ezVault " + asset.name
-          asset.icon = "/logo.svg";
-        }
-    }
+    if (address == lp["baseToken"].address)
+      asset = { type: "single", ...lp.baseToken};
+    else if (address == lp["quoteToken"].address)
+      asset = { type: "single", ...lp.quoteToken };
   }
   if (asset.name && asset.type != "ticker" && asset.type != "geVault")
     asset.icon = "/icons/" + asset.name.toLowerCase() + ".svg";

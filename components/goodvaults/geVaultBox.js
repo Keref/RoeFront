@@ -3,16 +3,16 @@ import { Card, Col, Popover, Divider } from "antd";
 import { QuestionCircleOutlined, WarningOutlined } from "@ant-design/icons";
 import Slider from "../design/slider";
 import { useRouter } from 'next/router';
-import useGeVault from "../../hooks/useGeVault";
+import useVaultV2 from "../../hooks/useVaultV2";
 import useAssetData from "../../hooks/useAssetData";
 import useTheme from "../../hooks/useTheme";
 
-const GeVaultBox = ({vault, gevault}) => {
+const GeVaultBox = ({vault}) => {
+  console.log(vault)
   const [highlightBox, setHighlightBox] = useState(false);
   const theme = useTheme();
   const router = useRouter();
-  const gevaultDetails = useGeVault(vault, gevault);
-  const mainAsset = useAssetData(vault ? vault.token0.address: null, vault.address)
+  const vaultDetails = useVaultV2(vault);
   
   const toReadable = (value) => {
     if (value == 0) return 0;
@@ -22,22 +22,11 @@ const GeVaultBox = ({vault, gevault}) => {
     if (value < 1e9) return (value / 1000).toFixed(0) + "M";
   };
   
-  if (!gevault.address || !vault.geVault ) return <></>  
+  if (!vault || !vault.address ) return <></>  
   
-  const RewardsTag = () => {
-    return (<div style={{backgroundColor: "#0A371B", color: theme.colorPrimary, borderRadius: 4, padding: "6px 8px", display: 'flex', alignItems: 'center', fontWeight: 600, fontSize: "smaller" }}>
-      <img src="/logo.svg" height={18} alt='Good Entry Logo' style={{ marginRight:4 }} />
-      Rewards
-    </div>)
-  }  
-  const DisabledTag = () => {
-    return (<div style={{ backgroundColor: "#DC4446", color: 'white', borderRadius: 4, padding: "6px 8px", display: 'flex', alignItems: 'center', fontWeight: 600, fontSize: "smaller" }}>
-      <WarningOutlined style={{ marginRight:4 }} />
-      Withdraw Only
-    </div>)
-  }
+
   
-  const filled = Math.round(100 * gevaultDetails.tvl / gevaultDetails.maxTvl);
+  const filled = Math.round(100 * vaultDetails.tvl / vaultDetails.maxTvl);
 
   
   return (
@@ -51,7 +40,7 @@ const GeVaultBox = ({vault, gevault}) => {
       onMouseOut={() => {
         setHighlightBox(false);
       }}
-      onClick={()=>{router.push("/vaults/"+gevault.name)}}
+      onClick={()=>{router.push("/vaults/"+vault.name)}}
     >
       <Card
         style= {{
@@ -65,23 +54,12 @@ const GeVaultBox = ({vault, gevault}) => {
           justifyContent: "space-between", height: '100%', gap: 12, 
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            width: "100%",
-          }}
-        >
-          { gevault.status == "Rewards" ? <RewardsTag/> : <></> }
-          { gevault.status == "Withdraw Only" ? <DisabledTag /> : <></> }
-        </div>
         <span
           style={{ fontSize: "x-large", marginLeft: 8 }}
         >
-          {gevaultDetails.name == "WETH-USDC" ? "ETH-USDC" : gevaultDetails.name}
+          {vaultDetails.name == "WETH-USDC" ? "ETH-USDC" : vaultDetails.name}
         </span>
-        <img src={gevaultDetails.icon} alt={vault.name.toLowerCase()} height={164} />
+        <img src={vaultDetails.icon} alt={vault.name.toLowerCase()} height={164} />
         
         <div
           style={{
@@ -104,12 +82,12 @@ const GeVaultBox = ({vault, gevault}) => {
                 content={
                   <div style={{ width: 250 }}>
                     Supply Interest:{" "}
-                    <span style={{ float: "right" }}>{parseFloat(gevaultDetails.supplyApr).toFixed(2)} %</span>
+                    <span style={{ float: "right" }}>{parseFloat(vaultDetails.supplyApr).toFixed(2)} %</span>
                     <br />
                     V3 Fees (7d annualized):{" "}
-                    <span style={{ float: "right" }}>{parseFloat(gevaultDetails.feeApr).toFixed(2)} %</span>
+                    <span style={{ float: "right" }}>{parseFloat(vaultDetails.feeApr).toFixed(2)} %</span>
                     <br />
-                    Token Incentives: <span style={{ float: "right" }}>{parseFloat(gevaultDetails.airdropApr).toFixed(2)} %</span>
+                    Token Incentives: <span style={{ float: "right" }}>{parseFloat(vaultDetails.airdropApr).toFixed(2)} %</span>
                   </div>
                 }
               >
@@ -117,7 +95,7 @@ const GeVaultBox = ({vault, gevault}) => {
               </Popover>
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              {(parseFloat(gevaultDetails.totalApr)).toFixed(2)} %
+              {(parseFloat(vaultDetails.totalApr)).toFixed(2)} %
             </span>
         </div>
         <div
@@ -136,7 +114,7 @@ const GeVaultBox = ({vault, gevault}) => {
               TVL
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              ${gevaultDetails.tvl == 0 ? <>0</> : toReadable(gevaultDetails.tvl)}
+              ${vaultDetails.tvl == 0 ? <>0</> : toReadable(vaultDetails.tvl)}
             </span>
         </div>
         <Slider value={filled} disabled={true} style={{marginTop: -12, marginBottom: -8}} />
@@ -156,7 +134,7 @@ const GeVaultBox = ({vault, gevault}) => {
               Max. Capacity
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              ${gevaultDetails.tvl == 0 ? <>0</> : toReadable(gevaultDetails.maxTvl)}
+              ${vaultDetails.tvl == 0 ? <>0</> : toReadable(vaultDetails.maxTvl)}
             </span>
         </div>
         <Divider style={{margin: "12px 0"}} />
@@ -184,7 +162,7 @@ const GeVaultBox = ({vault, gevault}) => {
             }}
           >
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              ${toReadable(gevaultDetails.walletValue)}
+              ${toReadable(vaultDetails.walletValue)}
             </span>
           </div>
         </div>

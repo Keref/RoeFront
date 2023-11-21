@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "yarn compile-contract-types && next dev",
+    "dev": "yarn compile-contract-types && next dev -p 8080",
     "build": "yarn compile-contract-types && next build",
     "start": "yarn compile-contract-types && next start",
     "export": "next build && next export -o build/",

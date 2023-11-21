@@ -6,7 +6,7 @@ import Slider from "../../components/design/slider";
 import TickChart from "../../components/goodvaults/tickChart";
 import StatsChart from "../../components/goodvaults/statsChart";
 import GeVaultForm from "../../components/goodvaults/geVaultForm";
-import useGeVault from "../../hooks/useGeVault";
+import useVaultV2 from "../../hooks/useVaultV2";
 import useAddresses from "../../hooks/useAddresses";
 import useAssetData from "../../hooks/useAssetData";
 import MigrationBox from "../../components/goodvaults/migrationBox";
@@ -17,18 +17,15 @@ const GeVaults = ({}) => {
   let { geVaultAddress } = router.query
 
   const ADDRESSES = useAddresses();
-  var gev = {}
+
   var vault = ADDRESSES['lendingPools'][0];
   for (let lp of ADDRESSES["lendingPools"]){
-    for (let gv of lp["geVault"]){
-      if(gv.name == geVaultAddress) {
-        vault = lp;
-        gev = gv;
-        break;
-      }
+    if(lp.name == geVaultAddress) {
+      vault = lp;
+      break;
     }
   }
-  const gevault = useGeVault(vault, gev);
+  const gevault = useVaultV2(vault);
   console.log(gevault)
 
   const RewardsTag = () => {
@@ -128,41 +125,6 @@ const GeVaults = ({}) => {
         md={9}
         xs={24}
       >
-        { /* From v1 ETH-USDC to v2 */
-          gevault.address == "0x41D0ebB0F0Bcf7A06E395D0551Cc695e4318594d" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x0d3cAA624E3a0076A6bc96Ba8D632D37F460Bc74" targetGeVault={gevault} /> 
-            : <></>
-        }
-        { /* From alpha ETH-USDC to v2 */
-          gevault.address == "0x41d0ebb0f0bcf7a06e395d0551cc695e4318594d" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x59fA26382De900F29B581553F31C6Da103884ffA" targetGeVault={gevault} /> 
-            : <></>
-        }
-        { /* From alpha ARB-USDC to v2 */
-          gevault.address == "0xbB59f5324FeA11E538fC7f46C3C7bFE5Ad36e8b9" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x31C3871B369bE1B2C3A26f963bcc407ee208099E" targetGeVault={gevault} /> 
-            : <></>
-        }
-        { /* From v1 ARB-USDC to v2 */
-          gevault.address == "0xbB59f5324FeA11E538fC7f46C3C7bFE5Ad36e8b9" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x14475be7D59895739207a9E5518903f4B94345B7" targetGeVault={gevault} /> 
-            : <></>
-        }
-        { /* From v1 BTC-USDC to v2 */
-          gevault.address == "0x819356bF26D384E7E70Cd26c07fc807e6B354F08" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0xdcc16DEfe27cd4c455e5520550123B4054D1b432" targetGeVault={gevault} /> 
-            : <></>
-        }
-        { /* From alpha GMX-USDC to v2 */
-          gevault.address == "0x48e455852669adb747b3d16f2bd8b541d696b697" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x10ca4492b9A4b74964C9b4763B87eFD0689aB0bE" targetGeVault={gevault} /> 
-            : <></>
-        }
-        { /* From v1 GMX-USDC to v2 */
-          gevault.address == "0x48e455852669adb747b3d16f2bd8b541d696b697" 
-            ? <MigrationBox vault={vault} sourceGeVaultAddress="0xa82577af74ae9D450DC04dF62Fc5C14748a0B3Ae" targetGeVault={gevault} /> 
-            : <></>
-        }
         <GeVaultForm vault={vault} gevault={gevault} />
       </Col>
     </Row>

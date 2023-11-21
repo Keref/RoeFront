@@ -1,85 +1,98 @@
 import useAssetData from "../../hooks/useAssetData";
 import useUnderlyingAmount from "../../hooks/useUnderlyingAmount";
-import CloseTrPositionButton from "../closeTrPositionButton";
+import ClosePositionButton from "./closePositionButton";
 import useAddresses from "../../hooks/useAddresses";
-import usePerpsEventLogs from "../../hooks/usePerpsEventLogs";
-import useUniswapPrice from "../../hooks/useUniswapPrice";
 import PnlPopup from  "./pnlPopup.js";
 import { CaretUpOutlined, CaretDownOutlined, ExportOutlined } from "@ant-design/icons";
+import { ethers } from "ethers";
 
-const PositionsRowV2 = ({ position, checkPositions, debtAddress }) => {
-  const asset = useAssetData(debtAddress, position.vault);
 
-  const vault = useAddresses(position.vault)['lendingPools'][0];
-  const token0 = useAssetData(vault.token0.address, position.vault);
-  const price = useUniswapPrice(
-    vault.uniswapPool,
-    vault.token0.decimals - vault.token1.decimals
-  );
+const PositionsRowV2 = ({ position, vault, price }) => {
+  /*
+    struct Position {
+      bool isCall;
+      /// @notice option type: 0: regular, 1: streaming
+      OptionType optionType;
+      uint strike;
+      uint notionalAmount;
+      uint collateralAmount;
+      uint startDate;
+      /// @dev if streaming option, this will be fundingRate, if fixed option: endDate
+      // Funding rate in quoteToken per second X10
+      uint data;
+    }
+    added positionId in hook
+  */
 
-  // direction: position is de facto long whatever asset it mainly holds
-  position.direction = (position.amount0 / 1e18 * price > position.amount1 / 1e6) ? "Long" : "Short"
-  const { tokenAmounts, tokenAmountsExcludingFees, totalSupply } = useUnderlyingAmount(debtAddress, vault);
-  
+  let direction = position.isCall ? "LONG" : "SHORT"
+  let strike = parseFloat(ethers.utils.formatUnits(position.strike, 8))
   // pnl = assets value - debt value , debt value = debt amount / total Supply * underlying value
-  let pnl = (position.amount0 / 1e18 * price + position.amount1 / 1e6) 
-            - asset.debt * 1e18 / totalSupply * (tokenAmounts.amount0 * price + parseFloat(tokenAmounts.amount1))
-  
-  let pnlPercent = pnl / (position.entryUsd / 1e8) * 100;
-  let direction = position.direction;
-  let entry = position.avgEntry;
+  let pnl = 0;
 
+  if (position.isCall && price > strike){
+    pnl = position.notionalAmount * (price - strike) / 10**(vault.baseToken.decimals)
+  } else if (!position.isCall && price < strike){
+    pnl = (position.notionalAmount / strike ) * (strike - price) / 10**(vault.quoteToken.decimals)
+  }
+  // remove the 4e6 from exercise fee
+  let pnlPercent = pnl / (position.collateralAmount - 4e6) * 100;
+  let notionalUsd = position.isCall ? 
+    ethers.utils.formatUnits(position.notionalAmount * position.strike)
+    : ethers.utils.formatUnits(position.notionalAmount, vault.quoteToken.decimals);
+  // divide by 1e10 for scaling and 1e6 for usdc decimals * 100 for percent
+  let fundingRate = position.data.mul(3600).toNumber() / notionalUsd / 1e14
+  
   const tdStyle = { paddingTop: 4, paddingBottom: 4 };
 
   return (
-    <tr key={asset.address}>
+    <tr key={position.startDate}>
       <td style={{...tdStyle, paddingLeft: 0, fontWeight: 'bold'}}>
         <div style={{ display: "flex", alignItems: "center" }}>
           <img
-            src={token0.icon}
-            alt={token0.name}
+            src={"/icons/"+vault.baseToken.name.toLowerCase()+".svg"}
+            alt={vault.baseToken.name}
             height={20}
             style={{ marginRight: 8 }}
           />
-          {token0.name} {asset.price}
+          {vault.baseToken.name}
         </div>
       </td>
       <td style={tdStyle}>
         <span
           style={{
-            color: direction == "Long" ? "#55d17c" : "#e57673",
+            color: position.isCall ? "#55d17c" : "#e57673",
             fontWeight: "bold",
             fontSize: "smaller",
           }}
         >
-          {direction.toUpperCase()}
+          {direction}
         </span>
       </td>
       <td style={tdStyle}>
-        <span style={{fontWeight: 500 }}>${(position.entryUsd / 1e8).toFixed(2)}</span>
+        <span style={{fontWeight: 500 }}>${notionalUsd}</span>
       </td>
       <td style={tdStyle}>
-        {(asset.debtApr / 365 / 24).toFixed(4)}%
+        {fundingRate.toFixed(4)}%
       </td>
-      <td style={tdStyle}>${entry.toFixed(2)}</td>
+      <td style={tdStyle}>${ethers.utils.formatUnits(position.strike, 8)}</td>
       <td style={tdStyle}>
         <div style={{ display: 'flex', alignItems: 'center'}}>
           <div style={{ marginRight: 8}}>
-            <span style={{ color: pnl > 0 ? "#55d17c" : "#e57673" }}>
-              {pnl > 0 ? <CaretUpOutlined /> : <CaretDownOutlined />}
+            <span style={{ color: pnl >= 0 ? "#55d17c" : "#e57673" }}>
+              {pnl == 0 ? <></> : (pnl > 0 ? <CaretUpOutlined /> : <CaretDownOutlined />)}
               {pnlPercent.toFixed(2)}%
             </span>
             <br />
             {" "}${(isNaN(pnl) ? 0 : pnl).toFixed(3)}
           </div>
           
-          <PnlPopup token0={token0} direction={direction} pnl={pnl} pnlPercent={pnlPercent} entry={entry} price={price} >
+          <PnlPopup token0={vault.baseToken} direction={direction} pnl={pnl} pnlPercent={pnlPercent} strike={position.strike.toString()} price={price} >
             <ExportOutlined />
           </PnlPopup>
         </div>
       </td>
       <td style={tdStyle}>
-        <CloseTrPositionButton address={asset.address} vault={vault} checkPositions={checkPositions} direction={direction} />
+        <ClosePositionButton position={position} vault={vault} />
       </td>
     </tr>
   );

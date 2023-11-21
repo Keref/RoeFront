@@ -37,7 +37,8 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
   const quoteContract = useContract(vault.quoteToken.address, ERC20_ABI)
   const strikeContract = useContract(strikeManagerAddress, StrikeManager_ABI)
   const oracleContract = useContract("0x2ce8FdFA67c78D1c313449819603AA52d3d2CC41", ORACLE_ABI);
-
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  
   // Get user's USDC balance
   useEffect(() => {
     const getData = async () => {
@@ -90,8 +91,15 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
           ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
           : ethers.utils.parseUnits(positionSize, vault.quoteToken.decimals);
       let collateralAmountAdj = ethers.utils.parseUnits(collateralAmount, vault.quoteToken.decimals);
+      // check allowance // dirty add the 4e6 fixed exercise fee
+      let result = await quoteContract.allowance(account, vault.positionManagerV2);
+      if ( result.lt(collateralAmountAdj + 4e6)) {
+        result = await quoteContract.approve(vault.positionManagerV2, ethers.constants.MaxUint256);
+        await delay(6000);
+      }
+      
       // function openStreamingPosition(bool isCall, uint notionalAmount, uint collateralAmount) external returns (uint tokenId)
-      const { hash } = pmContract.openStreamingPosition(isCall, notionalAmount, collateralAmountAdj);
+      const { hash } = await pmContract.openStreamingPosition(isCall, notionalAmount, collateralAmountAdj);
 
       showSuccessNotification(
         "Position opened",
@@ -174,6 +182,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
           </div>
           <div style={{borderRadius: 4, backgroundColor: "#1D2329", padding: 8, marginBottom: 4 }}>
             {(strikeX8/1e8).toString()}
+            <span style={{ float: "right"}}>{fundingRate.toFixed(4)}</span>
           </div>
 
           Position Size

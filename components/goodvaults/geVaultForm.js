@@ -12,10 +12,9 @@ import { ethers } from "ethers";
 
 /// Asserts that ETH is always token0 (as per arbitrum)
 const GeVaultForm = ({vault, gevault}) => {
-  if (vault.token0.name == "WETH") vault.token0.name = "ETH";
   const { account, chainId } = useWeb3React();
   const [direction, setDirection] = useState("Deposit");
-  const [token, setToken] = useState(vault.token0.name)
+  const [token, setToken] = useState(vault.baseToken.name)
   const [inputValue, setInputValue] = useState()
   const [isSpinning, setSpinning] = useState(false);
   const [showSuccessNotification, showErrorNotification, contextHolder] =
@@ -23,18 +22,18 @@ const GeVaultForm = ({vault, gevault}) => {
   const geVault = useGeVault(vault, gevault);
 
   useEffect(() => {
-    setToken(vault.token0.name);
+    setToken(vault.baseToken.name);
   }, [vault]);
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
   const ethBalance = useETHBalance(account).data / 1e18;
-  const assetData = useAssetData(vault.token0.name == token ? vault.token0.address : vault.token1.address, vault.address);
+  const assetData = useAssetData(token == vault.baseToken.name ? vault.baseToken.address : vault.quoteToken.address, vault.address);
   const tokenContract = useTokenContract(assetData.address);
 
-  // if deposit token0 or withdraw token1, fee is fee0
+  // if deposit baseToken or withdraw baseToken, fee is fee0
   var operationFee = geVault.fee1;
-  if ( (direction == "Deposit" && token == vault.token0.name) || (direction == "Withdraw" && token == vault.token1.name) ) operationFee = geVault.fee0;
+  if ( (direction == "Deposit" && token == vault.baseToken.name) || (direction == "Withdraw" && token == vault.quoteToken.name) ) operationFee = geVault.fee0;
   var balance = geVault.wallet;
   if (direction == "Deposit") {
     if( token == "ETH" ) balance = ethBalance
@@ -107,13 +106,13 @@ const GeVaultForm = ({vault, gevault}) => {
   const items = [
     {
       key: '1',
-      label: vault.token0.name,
-      onClick: (e) => {setToken(vault.token0.name)}
+      label: vault.baseToken.name,
+      onClick: (e) => {console.log(vault.baseToken.name); setToken(vault.baseToken.name)}
     },
     {
       key: '2',
-      label: vault.token1.name,
-      onClick: (e) => {setToken(vault.token1.name)}
+      label: vault.quoteToken.name,
+      onClick: (e) => {console.log(vault.quoteToken.name); setToken(vault.quoteToken.name)}
     }
   ]
   

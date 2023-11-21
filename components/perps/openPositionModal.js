@@ -9,8 +9,7 @@ const OpenPositionModal = ({
     market,
     side,
     size,
-    fundinRate,
-    activationPrice
+    fundinRate
   }) => {
     
   return (
@@ -40,10 +39,6 @@ const OpenPositionModal = ({
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
       <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Current Hourly Rate</span>
       <span style={{ fontSize: "small"}}>{parseFloat(fundinRate / 365 / 24 ).toFixed(5)}%</span>
-    </div>
-    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
-      <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Activation Price</span>
-      <span style={{fontSize: "small" }}>${activationPrice.toFixed(3)}</span>
     </div>
     <Divider style={{margin: 10}} />
     {button}
