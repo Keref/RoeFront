@@ -8,7 +8,6 @@ import useAssetData from "../../hooks/useAssetData";
 import useTheme from "../../hooks/useTheme";
 
 const GeVaultBox = ({vault}) => {
-  console.log(vault)
   const [highlightBox, setHighlightBox] = useState(false);
   const theme = useTheme();
   const router = useRouter();

@@ -36,7 +36,7 @@ const PositionsRowV2 = ({ position, vault, price }) => {
   // remove the 4e6 from exercise fee
   let pnlPercent = pnl / (position.collateralAmount - 4e6) * 100;
   let notionalUsd = position.isCall ? 
-    ethers.utils.formatUnits(position.notionalAmount * position.strike)
+    ethers.utils.formatUnits(position.notionalAmount.mul(position.strike).div(1e8))
     : ethers.utils.formatUnits(position.notionalAmount, vault.quoteToken.decimals);
   // divide by 1e10 for scaling and 1e6 for usdc decimals * 100 for percent
   let fundingRate = position.data.mul(3600).toNumber() / notionalUsd / 1e14
@@ -68,7 +68,7 @@ const PositionsRowV2 = ({ position, vault, price }) => {
         </span>
       </td>
       <td style={tdStyle}>
-        <span style={{fontWeight: 500 }}>${notionalUsd}</span>
+        <span style={{fontWeight: 500 }}>${parseFloat(notionalUsd).toFixed(2)}</span>
       </td>
       <td style={tdStyle}>
         {fundingRate.toFixed(4)}%

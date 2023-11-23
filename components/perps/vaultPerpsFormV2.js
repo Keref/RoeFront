@@ -78,7 +78,11 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
       // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
       setFundingRate(100 * optionPriceX8 / 6 / 1e8);
     }
-    if (price > 0) getData()
+    try {
+      if (price > 0) getData()
+    } catch(e) {
+      console.log('getOptionPrice', e);
+    }
   }, [positionSize, price,  isCall, pmContract, strikeX8, vault.baseToken.decimals, vault.quoteToken.decimals])
 
 
