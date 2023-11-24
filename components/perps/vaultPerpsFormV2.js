@@ -18,7 +18,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
   const { account, library } = useWeb3React();
   const [isSpinning, setSpinning] = useState()
   const [quoteBalance, setQuoteBalance] = useState(0)
-  const [strikeX8, setStrike] = useState(ethers.constants.Zero);
+  const [strikeX8, setStrike] = useState(ethers.constants.Zero.add(1));
   const [direction, setDirection] = useState("Long");
   let isCall = direction == "Long";
   
@@ -62,27 +62,35 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
   // Compute funding rate based on current input parameters
   useEffect(() => {
     const getData = async () => {
-      // position size in quote tokens on UX, but the contract needs size in base token for longs, and quote tokens for shorts
-      let notionalAmount = 
-        isCall ? 
-          ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
-          : ethers.utils.parseUnits(positionSize, vault.quoteToken.decimals);
-      // the price is per unit, not for the whole notionalAmount. used to estimate utilizationRate accurately (higher utilization rate will push option price up)
-      // function getOptionPrice(bool isCall, uint strike, uint size, uint timeToExpirySec) public view returns (uint optionPriceX8);
-      const optionPriceX8 = await pmContract.getOptionPrice(
-        isCall, 
-        strikeX8.toString(), 
-        notionalAmount,
-        21600 // 6h, time for streaming options
-      );
-      // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
-      setFundingRate(100 * optionPriceX8 / 6 / 1e8);
+      try {
+        // position size in quote tokens on UX, but the contract needs size in base token for longs, and quote tokens for shorts
+        let notionalAmount = 
+          isCall ? 
+            ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
+            : ethers.utils.parseUnits(positionSize, vault.quoteToken.decimals);
+        // the price is per unit, not for the whole notionalAmount. used to estimate utilizationRate accurately (higher utilization rate will push option price up)
+        
+        console.log('lol', 
+          isCall, 
+          strikeX8.toString(), 
+          notionalAmount.toString(),
+          21600 // 6h, time for streaming options
+        )
+        // function getOptionPrice(bool isCall, uint strike, uint size, uint timeToExpirySec) public view returns (uint optionPriceX8);
+        const optionPriceX8 = await pmContract.getOptionPrice(
+          isCall, 
+          strikeX8.toString(), 
+          notionalAmount,
+          21600 // 6h, time for streaming options
+        );
+        console.log('option price ', optionPriceX8.toString())
+        // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
+        setFundingRate(100 * optionPriceX8 / 6 / 1e8 / price);
+      } catch(e) {
+        console.log('getOptionPrice', e);
+      }
     }
-    try {
-      if (price > 0) getData()
-    } catch(e) {
-      console.log('getOptionPrice', e);
-    }
+    if (price > 0) getData()
   }, [positionSize, price,  isCall, pmContract, strikeX8, vault.baseToken.decimals, vault.quoteToken.decimals])
 
 
