@@ -1,33 +1,39 @@
-import ethers from "ethers";
-import useAssetData from "../../hooks/useAssetData";
+import { ethers } from "ethers";
+import {useState, useEffect} from "react"
+import useContract from "../../hooks/useContract";
+import GoodEntryPositionManager_ABI from "../../contracts/GoodEntryPositionManager.json";
 
-const HistoryTx = ({tx}) => {
-  const asset = useAssetData(tx.asset)
-  const token = useAssetData(tx.token0)
-  const base = tx.ticker ? tx.ticker 
-      : tx.strike >= 20000 ? "BTC"
-        : tx.strike >= 500 ? "ETH"
-          : tx.strike >= 20 ? "GMX"
-            : "ARB"
-  var action;
-  var sign = "-";
-  if (tx.type == "BuyOptions") {
-    action = "Open";
-    sign = "+"
-  }
-  else if (tx.type == "ClosePosition") action = "Close"
-  else if (tx.type == "LiquidatePosition") action = "Liquidation"
-  else return <></>
-     
+
+const HistoryTx = ({tx, vault}) => {
+  const [position, setPosition] = useState({})
+
+  const iface = new ethers.utils.Interface(["event ClosedPosition(address indexed user, address closer, uint tokenId, int pnl)"])
+  const data = iface.decodeEventLog("ClosedPosition", tx.data)
+
+  const pmContract = useContract(vault.positionManagerV2, GoodEntryPositionManager_ABI);
+
+  useEffect(() => {
+    const getPosition = async () => {
+      try {
+        const pos = await pmContract.getPosition(data.tokenId)
+        setPosition(pos)
+      }
+      catch(e) {console.log("Error fetching NFTs", e)}
+    };
+
+    if (vault.positionManagerV2 && pmContract) getPosition();
+  }, [data.tokenId.toNumber(), vault.positionManagerV2, pmContract]);
+  
+  if (position.startDate == 0) return <></>
+  
+  //console.log(tx.transactionHash, position, position.notionalAmount.toString(), data)
   return (<tr>
-    <td>{new Date(tx.date ?? 0).toLocaleString()}</td>
-    <td><a href={"https://arbiscan.io/tx/"+tx.hash} target="_blank" rel="noreferrer" >{tx.hash.substring(0,8)}...</a></td>
-    <td>{base}-{tx.strike}</td>
-    <td>{action}</td>
-    <td>{tx.underlying ? <>{sign}{parseFloat(tx.underlying.amount0 / 10**token.decimals).toFixed(3)}</> : " "} {base}</td>
-    <td>{tx.underlying ? <>{sign}{parseFloat(tx.underlying.amount1 / 1e6).toFixed(3)}</> : " "} USDC</td>
-    <td>{tx.amountDebt ? <>${sign}{parseFloat(tx.amountDebt / 1e18 * asset.oraclePrice).toFixed(3)}</> : " "}</td>
-    <td>{tx.pnl ? <>${parseFloat(tx.pnl/1e8).toFixed(6)}</> : "-"}</td>
+    <td>{new Date(position.startDate * 1000 ?? 0).toLocaleString()}</td>
+    <td><a href={"https://arbiscan.io/tx/"+tx.transactionHash} target="_blank" rel="noreferrer" >{tx.transactionHash.substring(0,8)}...</a></td>
+    <td>{position.isCall ? "LONG" : "SHORT"} {vault.baseToken.name}</td>
+    <td>{position.strike / 1e8}</td>
+    <td>{(position.notionalAmount / 10**(position.isCall ? vault.baseToken.decimals : vault.quoteToken.decimals)).toFixed(5)} {position.isCall ? vault.baseToken.name : position.quoteToken.name}</td>
+    <td>${(data.pnl / 1e8).toFixed(4)}</td>
   </tr>)
 }
 

@@ -13,29 +13,13 @@ const PositionsHistory = ({ account, vault, refresh }) => {
   }
   
   const history = usePositionsHistory(account, vault, refresh);
-  
+
   return (<>
-    <table border={0}>
-      <thead>
-        <tr>
-          <th align="left" style={{...thStyle, paddingLeft: 0}}>Date</th>
-          <th align="left" style={thStyle}>Tx</th>
-          <th align="left" style={thStyle}>Instrument</th>
-          <th align="left" style={thStyle}>Action</th>
-          <th align="left" style={thStyle}>Change Base</th>
-          <th align="left" style={thStyle}>Change Quote</th>
-          <th align="left" style={thStyle}>Change Debt</th>
-          <th align="left" style={thStyle}>PNL&nbsp;&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
         {
-          history && history.tx ? [...history.tx].reverse().map( tx => {
-            return (<HistoryTx key={tx.hash} tx={tx} />);
+          history ? [...history].reverse().map( tx => {
+            return (<HistoryTx key={tx.hash} tx={tx} vault={vault} />);
           }) : <></>
         }
-      </tbody>
-    </table>
   </>)
 }
 

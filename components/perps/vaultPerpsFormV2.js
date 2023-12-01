@@ -273,7 +273,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
       </Button>
     </Card>
     <Card>
-      <PayoutChart />
+      <PayoutChart direction={direction} price={price} strike={strikeX8/1e8} step={Math.floor(price/100)} />
     </Card>
   </>
   );

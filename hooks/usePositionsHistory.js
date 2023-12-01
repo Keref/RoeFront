@@ -3,7 +3,7 @@ import axios from "axios";
 
 
 const usePositionsHistory = (account, vault, refresh) => {
-  const [data, setdata] = useState({});
+  const [data, setdata] = useState([]);
   // get 
   /* https://api.arbiscan.io/api?module=logs&action=getLogs
        &toBlock=22524653
@@ -21,16 +21,16 @@ const usePositionsHistory = (account, vault, refresh) => {
       await new Promise(resolve => setTimeout(resolve, 2000));
       //console.log('Check history')
       try {
-        const url = "https://roe.nicodeva.xyz/stats/arbitrum/getx.json?timestamp="+(new Date().getTime())
-        var dataraw = (await axios.get(url)).data;
+        const url = "https://api.arbiscan.io/api?module=logs&action=getLogs&topic0=0xc6ec1e16b7b639fb4e5dfccd3a9134b7190008e32a93758705a829394bae907a&topic0_1_opr=and&apiKey=BYUIRGM2YBGEM36ZSC7PWW7DTAP8FY2KIW&topic1=0x000000000000000000000000"+account.substring(2,42)
 
-        if (dataraw[account]) setdata(dataraw[account])
+        var dataraw = (await axios.get(url)).data.result;
+        setdata(dataraw)
       }
       catch(e) {
         console.log("PositionsHistory data", e)
       }
     }
-    //if (account && vault) getData();
+    if (account && vault) getData();
   }, [account, vault, refresh]);
   return data;
 }

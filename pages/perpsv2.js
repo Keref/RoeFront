@@ -95,10 +95,8 @@ const PerpsV2 = () => {
                           <th align="left" style={{...thStyle, paddingLeft: 0}}>Date</th>
                           <th align="left" style={thStyle}>Tx</th>
                           <th align="left" style={thStyle}>Instrument</th>
-                          <th align="left" style={thStyle}>Action</th>
-                          <th align="left" style={thStyle}>Change Base</th>
-                          <th align="left" style={thStyle}>Change Quote</th>
-                          <th align="left" style={thStyle}>Change Debt</th>
+                          <th align="left" style={thStyle}>Strike</th>
+                          <th align="left" style={thStyle}>Amount</th>
                           <th align="left" style={thStyle}>PNL&nbsp;&nbsp;</th>
                         </tr>
                       </thead>
