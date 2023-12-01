@@ -11,6 +11,7 @@ import useContract from "../../hooks/useContract";
 import { ethers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { useTxNotification } from "../../hooks/useTxNotification";
+import PayoutChart from "./payoutChart";
 
 
 const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
@@ -69,13 +70,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
             ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
             : ethers.utils.parseUnits(positionSize, vault.quoteToken.decimals);
         // the price is per unit, not for the whole notionalAmount. used to estimate utilizationRate accurately (higher utilization rate will push option price up)
-        
-        console.log('lol', 
-          isCall, 
-          strikeX8.toString(), 
-          notionalAmount.toString(),
-          21600 // 6h, time for streaming options
-        )
+
         // function getOptionPrice(bool isCall, uint strike, uint size, uint timeToExpirySec) public view returns (uint optionPriceX8);
         const optionPriceX8 = await pmContract.getOptionPrice(
           isCall, 
@@ -83,7 +78,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
           notionalAmount,
           21600 // 6h, time for streaming options
         );
-        console.log('option price ', optionPriceX8.toString())
+        console.log('option price ', optionPriceX8.toString(), price)
         // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
         setFundingRate(100 * optionPriceX8 / 6 / 1e8 / price);
       } catch(e) {
@@ -234,7 +229,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
         </div>
       </div>
     </Card>
-    <Card>
+    <Card style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
         <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Market</span>
         <span style={{fontSize: "small"}}>{vault.name}</span>
@@ -276,6 +271,9 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
           : isOpenPositionButtonDisabled ? openPositionButtonErrorTitle : "Open " + direction
         }
       </Button>
+    </Card>
+    <Card>
+      <PayoutChart />
     </Card>
   </>
   );

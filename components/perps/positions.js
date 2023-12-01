@@ -13,7 +13,7 @@ const Positions = ({ vault }) => {
  
   //const history = usePositionsHistory(account, refresh);
   let positions = usePositionsV2(account, vault.positionManagerV2)
-  console.log('positions', positions)
+
   let price = useOraclePrice(vault);
   
   return (<>

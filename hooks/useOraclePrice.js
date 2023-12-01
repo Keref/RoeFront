@@ -6,7 +6,10 @@ import { ethers } from "ethers";
 
 export default function useOraclePrice(vault) {
   const [price, setPrice] = useState(0);
-  const vaultContract = useContract(vault.address, GEV_ABI);
+  //const vaultContract = useContract(vault.address, GEV_ABI);
+
+  const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
+  const vaultContract = new ethers.Contract(vault.address, GEV_ABI, customProvider);
 
   useEffect(() => {
     const getPrice = async () => {
@@ -17,6 +20,7 @@ export default function useOraclePrice(vault) {
       catch(e) {console.log("Error fetching Uniswap price", e)}
     };
 
+    if (vault.address && vaultContract) getPrice();
     const intervalId = setInterval(() => {
       if (vault.address && vaultContract) getPrice();
     }, 10000);

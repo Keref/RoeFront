@@ -12,7 +12,7 @@ const GeVaultBox = ({vault}) => {
   const theme = useTheme();
   const router = useRouter();
   const vaultDetails = useVaultV2(vault);
-  
+  console.log(vaultDetails)
   const toReadable = (value) => {
     if (value == 0) return 0;
     if (value < 10) return parseFloat(value).toFixed(2);

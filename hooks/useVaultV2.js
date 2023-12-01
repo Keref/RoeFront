@@ -57,15 +57,15 @@ export default function useVaultV2(vault) {
         let tSupply = ethers.utils.formatUnits(tS, 18);
         setTotalSupply(tSupply);
         
-        let tTvl = await vaultV2Contract.getTVL();
-        let tValue = ethers.utils.formatUnits(tTvl, 8);
+        let tTvl = await vaultV2Contract.getReserves();
+        let tValue = ethers.utils.formatUnits(tTvl.valueX8, 8);
         setTvl(tValue);
         
         let uBal = ethers.utils.formatUnits(await vaultV2Contract.balanceOf(account), 18)
         setUserBalance(uBal);
         setUserValue(tValue == 0 ? 0 : tValue * uBal / tSupply);
         
-        let tCap = ethers.utils.formatUnits(await vaultV2Contract.tvlCap(), 8).split('.')[0]
+        let tCap = ethers.utils.formatUnits(await vaultV2Contract.tvlCapX8(), 8).split('.')[0]
         setMaxTvl(tCap);
         
         setFee0( (await vaultV2Contract.getAdjustedBaseFee(true) )/100 );

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ADDRESSES from "../constants/RoeAddresses.json";
 import { useWeb3React } from "@web3-react/core";
-import GEVAULT_ABI from "../contracts/GeVault.json";
+import GEVAULT_ABI from "../contracts/GoodEntryVault.json";
 import ERC20_ABI from "../contracts/ERC20.json";
 import useContract from "./useContract";
 import { ethers } from "ethers";
@@ -22,7 +22,6 @@ export default function useGeVault(vault, gevault) {
   const { account } = useWeb3React();
   const address = gevault.address;
   const gevaultContract = useContract(address, GEVAULT_ABI);
-  const tpContract = useContract(address, ERC20_ABI);
   const goodStats = useGoodStats();
 
   const feesRate = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].feesRate) : 0;
@@ -55,21 +54,22 @@ export default function useGeVault(vault, gevault) {
   useEffect( () => {
     const getData = async () => {
       try {
-        let tS = await tpContract.totalSupply()
+        let tS = await gevaultContract.totalSupply()
         let tSupply = ethers.utils.formatUnits(tS, 18);
         setTotalSupply(tSupply);
         
-        let tTvl = await gevaultContract.getTVL();
-        let tValue = ethers.utils.formatUnits(tTvl, 8);
+        let tTvl = await gevaultContract.getReserves();
+
+        let tValue = ethers.utils.formatUnits(tTvl.valueX8, 8);
         setTvl(tValue);
-        
+
         let uBal = ethers.utils.formatUnits(await gevaultContract.balanceOf(account), 18)
         setUserBalance(uBal);
         setUserValue(tValue == 0 ? 0 : tValue * uBal / tSupply);
-        
-        let tCap = ethers.utils.formatUnits(await gevaultContract.tvlCap(), 8).split('.')[0]
+
+        let tCap = ethers.utils.formatUnits(await gevaultContract.tvlCapX8(), 8).split('.')[0]
         setMaxTvl(tCap);
-        
+
         setFee0( (await gevaultContract.getAdjustedBaseFee(true) )/100 );
         setFee1( (await gevaultContract.getAdjustedBaseFee(false) )/100 );
       }
