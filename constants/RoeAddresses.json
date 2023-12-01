@@ -2,18 +2,19 @@
   "42161": {
     "network": "Arbitrum",
     "referrals": "0x6EE947E1eBB4dF794fBcbB0007523D2ca7d8c7fB",
-    "strikeManager": "0x1E1D00E7E1807E928CAe0b1b186d089d3616d6d9",
+    "strikeManager": "0x6B49C1EFC952494ad7d32Cd04f9A6d85354a650E",
     "oracle" : "0x4A9EB72b72cB6fBbD8eF8C83342f252e519559e9",
+    "goodEntryCore": "0xdDeC418c1a825Ac09aD83cc1A28a2c5Bcd746050",
     "lendingPools": [
       {
-        "name": "ARB-USDC.e",
-        "positionManagerV2": "0xcD73089518417C2455E299F0aF46798cd3395366",
-        "address": "0x8868B963c0C77Be88a0830417Dd8A69C1E6043c0",
-        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ARBUSDT&interval=",
-        "tvSymbol" : "BYBIT:ARBUSDC",
+        "name": "ETH-USDC.e",
+        "address": "0x36003A975bFC56f650590C26B1479ba423217931",
+        "positionManagerV2": "0x8c037eF65e1B3d2094AC75c301e2b1e6eA7e3D67",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
+        "tvSymbol" : "BYBIT:ETHUSDC",
         "baseToken": {
-          "name": "ARB",
-          "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
+          "name": "ETH",
+          "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
           "decimals": 18
         },
         "quoteToken": {
@@ -23,14 +24,14 @@
         }
       },
       {
-        "name": "ETH-USDC.e",
-        "positionManagerV2": "0xE85884C4fc87aaCb0Dbcc06aab3Dc54638352b3e",
-        "address": "0x5132016aAc0536c8bA45D71E2A2fb052E9dC6443",
-        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
-        "tvSymbol" : "BYBIT:ETHUSDC",
+        "name": "ARB-USDC.e",
+        "address": "0xd5fE1A54fA642400ef559d866247cCE66049141B",
+        "positionManagerV2": "0x8D905e2F41430795293aca990b83798a91aF1D53",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ARBUSDT&interval=",
+        "tvSymbol" : "BYBIT:ARBUSDC",
         "baseToken": {
-          "name": "ETH",
-          "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+          "name": "ARB",
+          "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
           "decimals": 18
         },
         "quoteToken": {
