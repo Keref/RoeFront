@@ -11,7 +11,7 @@ function Airdrop() {
   const { account, library } = useWeb3React();
   const [airdropAmount, setAirdropAmount] = useState()
   const [airdropProof, setAirdropProof] = useState()
-  var AIRDROP_ADDRESS  = "0x5c09C0194FC89CcDAe753f348D1534108F29e90a"; // dummy, not deployed yet
+  var AIRDROP_ADDRESS  = "0xa7c8b776a6a7d7F4E0f17D84d4C98b0ED8e1B3Ad"; // dummy, not deployed yet
   const PROOFS_URL = "https://roe.nicodeva.xyz/stats/arbitrum/proofs.json"
 
   const airdropContract = useContract(AIRDROP_ADDRESS, AIRDROP_ABI)
