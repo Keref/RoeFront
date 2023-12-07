@@ -12,7 +12,8 @@ const GeVaultBox = ({vault}) => {
   const theme = useTheme();
   const router = useRouter();
   const vaultDetails = useVaultV2(vault);
-  console.log(vaultDetails)
+  console.log('vaultDetails', vaultDetails)
+
   const toReadable = (value) => {
     if (value == 0) return 0;
     if (value < 10) return parseFloat(value).toFixed(2);
@@ -75,7 +76,7 @@ const GeVaultBox = ({vault}) => {
               }}
             >
               Projected APR{" "}
-              <Popover
+                {/*<Popover
                 placement="right"
                 title="APR"
                 content={
@@ -91,10 +92,10 @@ const GeVaultBox = ({vault}) => {
                 }
               >
                 <QuestionCircleOutlined />
-              </Popover>
+                </Popover>*/}
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              {(parseFloat(vaultDetails.totalApr)).toFixed(2)} %
+              {(parseFloat(vaultDetails.feeApr)).toFixed(2)} %
             </span>
         </div>
         <div
@@ -113,7 +114,7 @@ const GeVaultBox = ({vault}) => {
               TVL
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              ${vaultDetails.tvl == 0 ? <>0</> : toReadable(vaultDetails.tvl)}
+              ${toReadable(vaultDetails.tvl)}
             </span>
         </div>
         <Slider value={filled} disabled={true} style={{marginTop: -12, marginBottom: -8}} />
@@ -133,7 +134,7 @@ const GeVaultBox = ({vault}) => {
               Max. Capacity
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              ${vaultDetails.tvl == 0 ? <>0</> : toReadable(vaultDetails.maxTvl)}
+              ${toReadable(vaultDetails.maxTvl)}
             </span>
         </div>
         <Divider style={{margin: "12px 0"}} />

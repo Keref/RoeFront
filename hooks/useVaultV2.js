@@ -24,12 +24,8 @@ export default function useVaultV2(vault) {
   const vaultV2Contract = useContract(address, VAULTV2_ABI);
   const goodStats = useGoodStats();
 
-  const feesRate = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].feesRate) : 0;
-  const supplyRate = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].supplyRate) : 0;
-  const airdropRate = goodStats && goodStats[statsPeriod] ? parseFloat(goodStats[statsPeriod].airdropRate) : 0;
+  const feeApr = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].feesRate) : 0;
 
-  const tvl2 = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].tvl) / 1e8 : 0;
-  const maxTvl2 = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].maxTvl || 0) / 1e8 : 0;
 
 
   var data = {
@@ -40,9 +36,7 @@ export default function useVaultV2(vault) {
     totalSupply: totalSupply,
     fee0: fee0,
     fee1: fee1,
-    feeApr: feesRate,
-    supplyApr: supplyRate,
-    airdropApr: airdropRate,
+    feeApr: feeApr,
     totalApr: 0,
     wallet: userBalance,
     walletValue: userValue,
@@ -67,6 +61,13 @@ export default function useVaultV2(vault) {
         
         let tCap = ethers.utils.formatUnits(await vaultV2Contract.tvlCapX8(), 8).split('.')[0]
         setMaxTvl(tCap);
+        
+        // past fees, need to redeploy feeStreamer update
+        // let basePrice = ethers.utils.formatUnits(await vaultV2Contract.basePrice(), 8)
+        // let today = Math.floor(new Date().getTime() / 86400000)
+        // let yesterdayFees = await vaultV2Contract.getPastFees(today-1); // get [baseFees, quoteFees]
+        // let fees = yesterdayFees[0] / 10**vault.baseToken.decimals * basePrice + yesterdayFees
+        // setApr(  )
         
         setFee0( (await vaultV2Contract.getAdjustedBaseFee(true) )/100 );
         setFee1( (await vaultV2Contract.getAdjustedBaseFee(false) )/100 );

@@ -109,17 +109,12 @@ const GeVaults = ({}) => {
           Depending on the vault underlying assets imbalance, that fee is automatically adjusted from 0.1% to 0.3%.
         </Typography.Text>
         
-        <Typography.Title level={2}>Risk</Typography.Title>
+        <Typography.Title level={2}>Risks</Typography.Title>
         <Typography.Text>
-          The primary risk for running this strategy are similar to a lending market. Good Entry uses a conservative liquidation threshold and a higher reserve factor to manage this risk. 
+          The primary risk for running this strategy is extreme market volatility. Good Entry only allows limited open interest against the vaults, and should be profitable on average but extreme market events can lead to temporary losses. 
           <br/><br/>
-          The Good Entry ezVault smart contracts are being audited by Peckshield. Users are advised to exercise caution and only risk funds that they can afford to lose. 
+          The Good Entry ezVault smart contracts were audited by Veridise and another audit by Peckshield is ongoing. Users are advised to exercise caution and only risk funds that they can afford to lose. 
         </Typography.Text>
-        
-        <Card style={{ marginTop: 24 }}>
-          <TickChart vault={vault} gevault={gevault} />
-          <span style={{ fontSize: 'smaller', color: 'grey'}}>*Tick chart isn’t real time but the tick composition changes in real time from every deposit/withdrawal</span>
-        </Card>
       </Col>
       <Col
         md={9}
