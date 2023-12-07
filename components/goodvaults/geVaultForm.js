@@ -10,7 +10,7 @@ import { ethers } from "ethers";
 
 
 /// Asserts that ETH is always token0 (as per arbitrum)
-const vaultDetailsForm = ({vault, vaultDetails}) => {
+const geVaultForm = ({vault, vaultDetails}) => {
   const { account, chainId } = useWeb3React();
   const [direction, setDirection] = useState("Deposit");
   const [token, setToken] = useState(vault.baseToken.name)
@@ -199,4 +199,4 @@ const vaultDetailsForm = ({vault, vaultDetails}) => {
   </>);
 };
 
-export default vaultDetailsForm;
+export default geVaultForm;
