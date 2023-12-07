@@ -12,7 +12,7 @@ var statsPeriod = "7d";
 export default function useVaultV2(vault) {
   if (!vault) vault = {name: ""}
 
-  const [tvl, setTvl] = useState(0);
+  const [reserves, setReserves] = useState({baseAmount: 0, quoteAmount: 0, valueX8: 0});
   const [maxTvl, setMaxTvl] = useState(0);
   const [fee0, setFee0] = useState(0);
   const [fee1, setFee1] = useState(0);
@@ -31,7 +31,7 @@ export default function useVaultV2(vault) {
   var data = {
     address: address,
     name: vault.name,
-    tvl: tvl,
+    tvl: ethers.utils.formatUnits(reserves.valueX8, 8),
     maxTvl: maxTvl,
     totalSupply: totalSupply,
     fee0: fee0,
@@ -41,6 +41,7 @@ export default function useVaultV2(vault) {
     wallet: userBalance,
     walletValue: userValue,
     contract: vaultV2Contract,
+    reserves: reserves,
     icon: "/icons/" + vault.name.toLowerCase() + ".svg",
   }
   
@@ -51,9 +52,9 @@ export default function useVaultV2(vault) {
         let tSupply = ethers.utils.formatUnits(tS, 18);
         setTotalSupply(tSupply);
         
-        let tTvl = await vaultV2Contract.getReserves();
-        let tValue = ethers.utils.formatUnits(tTvl.valueX8, 8);
-        setTvl(tValue);
+        let tReserves = await vaultV2Contract.getReserves();
+        let tValue = ethers.utils.formatUnits(tReserves.valueX8, 8);
+        setReserves(tReserves);
         
         let uBal = ethers.utils.formatUnits(await vaultV2Contract.balanceOf(account), 18)
         setUserBalance(uBal);
@@ -78,7 +79,6 @@ export default function useVaultV2(vault) {
     }
     
     if (address && vaultV2Contract) {
-      console.log('getdata', address, vaultV2Contract)
       getData()
     }
   }, [address, vaultV2Contract])

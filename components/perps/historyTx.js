@@ -30,7 +30,8 @@ const HistoryTx = ({tx, vault}) => {
   return (<tr>
     <td>{new Date(position.startDate * 1000 ?? 0).toLocaleString()}</td>
     <td><a href={"https://arbiscan.io/tx/"+tx.transactionHash} target="_blank" rel="noreferrer" >{tx.transactionHash.substring(0,8)}...</a></td>
-    <td>{position.isCall ? "LONG" : "SHORT"} {vault.baseToken.name}</td>
+    <td>{vault.baseToken.name}</td>
+    <td>{position.isCall ? <span style={{color: "#10da5d"}}>LONG</span> : <span style={{color: "rgb(229, 118, 115)"}}>SHORT</span>}</td>
     <td>{position.strike / 1e8}</td>
     <td>{(position.notionalAmount / 10**(position.isCall ? vault.baseToken.decimals : vault.quoteToken.decimals)).toFixed(5)} {position.isCall ? vault.baseToken.name : vault.quoteToken.name}</td>
     <td>${(data.pnl / 1e8).toFixed(4)}</td>

@@ -9,7 +9,7 @@ import GeVaultForm from "../../components/goodvaults/geVaultForm";
 import useVaultV2 from "../../hooks/useVaultV2";
 import useAddresses from "../../hooks/useAddresses";
 import useAssetData from "../../hooks/useAssetData";
-import MigrationBox from "../../components/goodvaults/migrationBox";
+
 
 const GeVaults = ({}) => {
   const { account } = useWeb3React();
@@ -25,8 +25,8 @@ const GeVaults = ({}) => {
       break;
     }
   }
-  const gevault = useVaultV2(vault);
-  console.log(gevault)
+  const vaultDetails = useVaultV2(vault);
+
 
   const RewardsTag = () => {
     return (<div style={{backgroundColor: "#0A371B", color: "#0FFD6A", borderRadius: 4, padding: "6px 8px", display: 'flex', alignItems: 'center', fontWeight: 600 }}>
@@ -48,7 +48,7 @@ const GeVaults = ({}) => {
     </div>)
   }
 
-  const filled = Math.round(100 * gevault.tvl / gevault.maxTvl);
+  const filled = Math.round(100 * vaultDetails.tvl / vaultDetails.maxTvl);
 
   return (
   <div style={{ marginTop: -25, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100vw'}}>
@@ -63,25 +63,25 @@ const GeVaults = ({}) => {
       <Row style={{ width: 1200}}>
         <Col md={12}>
           <div style={{display: 'flex', gap: 12}}><VaultTag />
-            { gevault.status == "Withdraw Only" ? <DisabledTag /> : <></> }
+            { vaultDetails.status == "Withdraw Only" ? <DisabledTag /> : <></> }
           </div>
           <Typography.Title style={{ marginTop: 12 }}>
-            {gevault.name}
+            {vaultDetails.name}
           </Typography.Title>
           <div style={{ width: '350px', marginTop: 12, color: 'white'}}>
             <div style={{ display: 'flex', justifyContent: 'space-between'}}>
               <span>Current Deposits</span>
-              <span>${parseFloat(gevault.tvl).toFixed(0)}</span>
+              <span>${parseFloat(vaultDetails.tvl).toFixed(0)}</span>
             </div>
             <Slider value={filled} disabled={true} />
             <div style={{ display: 'flex', justifyContent: 'space-between'}}>
               <span>Max. Capacity</span>
-              <span>${gevault.maxTvl}</span>
+              <span>${vaultDetails.maxTvl}</span>
             </div>
           </div>
         </Col>
         <Col md={12}>
-          <img src={gevault.icon}  alt={vault.name.toLowerCase()} height={196} style={{float: 'right'}} />
+          <img src={vaultDetails.icon}  alt={vault.name.toLowerCase()} height={196} style={{float: 'right'}} />
         </Col>
       </Row>
     </Card>
@@ -99,7 +99,7 @@ const GeVaults = ({}) => {
         
         <Typography.Title level={2}>Performance</Typography.Title>
         <Card style={{ marginTop: 24, height: 300 }}>
-          <StatsChart vault={vault} gevault={gevault} />
+          <StatsChart vault={vault} gevault={vaultDetails} />
         </Card>
         
         <Typography.Title level={2}>Fee Structure</Typography.Title>
@@ -120,7 +120,7 @@ const GeVaults = ({}) => {
         md={9}
         xs={24}
       >
-        <GeVaultForm vault={vault} gevault={gevault} />
+        <GeVaultForm vault={vault} vaultDetails={vaultDetails} />
       </Col>
     </Row>
   </div>)
