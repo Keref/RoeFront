@@ -132,11 +132,11 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
   }
   
   // runway: hourly funding funding * size = hourly cost, runway in hours = collateral amount / hourly cost
-  let hourlyCost = fundingRate * positionSize
-  let runway = hourlyCost == 0 ? 0 : parseFloat(collateralAmount) / (fundingRate * positionSize)
+  let hourlyCost = fundingRate * positionSize / 100
+  let runway = hourlyCost == 0 ? 0 : parseFloat(collateralAmount) / hourlyCost
   let runwayHours = Math.floor(runway)
   let runwayMinutes = Math.floor((runway - runwayHours) * 60);
-  
+
   return (
   <>
     <Card style={{ marginBottom: 8, color: 'white' }}>
