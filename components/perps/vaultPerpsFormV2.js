@@ -27,8 +27,6 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
   // can request minPositionValueX8 from contract but it's fixed at $50 and wont likely change
   const [minPositionValue, setMinPositionValue] = useState(50);
   const minCollateralAmount = 1; // fixed in contract, min collateral $1
-
-  const [positionSize, setpositionSize] = useState("0");
   const [collateralAmount, setCollateralAmount] = useState(0);
   const [showSuccessNotification, showErrorNotification, contextHolder] =
     useTxNotification();
@@ -39,6 +37,11 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
   const strikeContract = useContract(strikeManagerAddress, StrikeManager_ABI)
   const oracleContract = useContract("0x2ce8FdFA67c78D1c313449819603AA52d3d2CC41", ORACLE_ABI);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  
+  const [leverage, setLeverage] = useState(4)
+  const leverageGrid = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
+  
+  const positionSize = collateralAmount * leverageGrid[leverage-1];
   
   // Get user's USDC balance
   useEffect(() => {
@@ -96,7 +99,8 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
       let notionalAmount = 
         isCall ? 
           ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
-          : ethers.utils.parseUnits(positionSize, vault.quoteToken.decimals);
+          : ethers.utils.parseUnits(positionSize.toString(), vault.quoteToken.decimals);
+          
       let collateralAmountAdj = ethers.utils.parseUnits(collateralAmount, vault.quoteToken.decimals);
       // check allowance // dirty add the 4e6 fixed exercise fee
       let result = await quoteContract.allowance(account, vault.positionManagerV2);
@@ -192,38 +196,53 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
             <span style={{ float: "right"}}>{fundingRate.toFixed(4)}</span>
           </div>
 
-          Position Size
+          <span style={{ fontWeight: "bold", }}>Size</span>
           <Input
             placeholder="Amount"
             suffix="USDC"
-            onChange={(e) => setpositionSize(e.target.value)}
+            onChange={(e) => setCollateralAmount(e.target.value)}
             key="inputamount"
-            value={positionSize}
+            value={collateralAmount}
           />
           <div>
-            Collateral
-            <span style={{ float: "right" }}>
-              Leverage: {parseFloat(collateralAmount) > 0 ? (positionSize / collateralAmount).toFixed(0)+"x" : <>&infin;</>}{" "}
-              <Popover
-                placement="top"
-                title="Leverage - Collateral"
-                style={{ border: "1px solid blue"}}
-                content={
-                  <div style={{ width: 250 }}>Collateral determines how long the position can be kept open. You are liquidited by time, not by price movement.<br/>There is also a flat $4 reserved exercised fee. It is returned to you if you close your position on time.<br/>If collateral runs out and a 3rd party closes the position, then that fee is split in half between that 3rd party and the protocol.
-                  <br/>Leverage is the effective position size vs the amount of collateral provided. Be careful, high leverage means short term positions!
-                  </div>
-                }
-              >
-                <QuestionCircleOutlined />
-              </Popover>
-            </span>
-            <Input
+            <span style={{ fontWeight: "bold", }}>Payout Multiplier</span><br/>
+          { leverage == 10 ? <img src="/images/sweatpepe.png"  style={{ float: 'right', height: 64, width: 64}} /> : <></>}
+            <div  style={{display: 'flex', flexDirection: 'row', gap: 36}}>
+              {/*Leverage: {parseFloat(collateralAmount) > 0 ? (positionSize / collateralAmount).toFixed(0)+"x" : <>&infin;</>}{" "}*/}
+              <Input style={{marginTop: 8, width: 96}} value={leverageGrid[leverage-1]} suffix="X" />
+              
+              <div style={{ fontSize: 'smaller'}}>
+                <span style={{color: 'grey'}}>Bust Time </span>
+                <Popover
+                  placement="top"
+                  title="Leverage"
+                  style={{ border: "1px solid blue"}}
+                  content={
+                    <div style={{ width: 250 }}>On GodEntry you are liquidated by time, not by price! <br/>No scam wicks, no Stop-Loss hunts ;)
+                    </div>
+                  }
+                >
+                  <QuestionCircleOutlined />
+                </Popover>
+                <br/>
+                <span style={{ fontSize: "small"}}>{runwayHours} h {runwayMinutes} min</span>
+              </div>
+            </div>
+            
+            {/*<Input
               style={{marginTop: 8}}
               placeholder="Amount"
               suffix="USDC"
-              onChange={(e) => setCollateralAmount(e.target.value)}
+              onChange={(e) => setLeverage(e.target.value)}
               key="collateralAmount"
               value={collateralAmount}
+            />*/}
+            <Slider
+              min={1}
+              max={10}
+              onChange={(val)=> setLeverage(val)}
+              tooltip={{ open: false}}
+              value={typeof leverage === 'number' ? leverage : 4}
             />
           </div>
         </div>
