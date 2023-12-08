@@ -6,7 +6,11 @@ import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useTxNotification } from "../../hooks/useTxNotification";
 
-const ClosePositionButton = ({ vault, position }) => {
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+const ClosePositionButton = ({ vault, position, setRefresh }) => {
   const { account } = useWeb3React();
   const [isSpinning, setSpinning] = useState(false);
   const [showSuccessNotification, showErrorNotification, contextHolder] =
@@ -17,12 +21,14 @@ const ClosePositionButton = ({ vault, position }) => {
     setSpinning(true);
     try {
       const { hash } = await opmContract.closePosition(position.positionId);
-
       showSuccessNotification(
         "Position closed",
         "Position closed successful",
         hash
       );
+      await sleep(2000)
+      console.log('gotta resf')
+      setRefresh(new Date().getTime())
     } catch (e) {
       console.log("Error closing position", e);
       showErrorNotification(e.code, e.reason);

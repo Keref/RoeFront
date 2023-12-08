@@ -78,7 +78,7 @@ const PerpsV2 = () => {
                         {
                           vaults.map( vault => {
                             return (
-                              <Positions key={vault.address} vault={vault} />
+                              <Positions key={vault.address} vault={vault} refresh={refreshCounter} setRefresh={setRefreshCounter} />
                             )
                           })
                         }
@@ -105,7 +105,7 @@ const PerpsV2 = () => {
                         {
                           vaults.map( vault => {
                             return (
-                              <PositionsHistory key={vault.address} account={account} vault={vault}/>
+                              <PositionsHistory key={vault.address} account={account} vault={vault} refresh={refreshCounter} />
                             )
                           })
                         }
@@ -121,6 +121,7 @@ const PerpsV2 = () => {
           vault={vaults[currentVault]}
           price={price}
           strikeManagerAddress={ADDRESSES["strikeManager"]}
+          refresh={setRefreshCounter}
         />
       </div>
     </div>

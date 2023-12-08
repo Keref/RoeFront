@@ -14,7 +14,7 @@ import { useTxNotification } from "../../hooks/useTxNotification";
 import PayoutChart from "./payoutChart";
 
 
-const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
+const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   // Note: all addresses.json will be revamped, esp. can replcae token0/token1 by baseToken/quoteToken so easier to quesry and display
   const { account, library } = useWeb3React();
   const [isSpinning, setSpinning] = useState()
@@ -111,7 +111,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
       
       // function openStreamingPosition(bool isCall, uint notionalAmount, uint collateralAmount) external returns (uint tokenId)
       const { hash } = await pmContract.openStreamingPosition(isCall, notionalAmount, collateralAmountAdj);
-
+      refresh(new Date().getTime())
       showSuccessNotification(
         "Position opened",
         "Position opened successful",

@@ -8,18 +8,18 @@ import useOraclePrice from "../../hooks/useOraclePrice";
 import usePositionsV2 from "../../hooks/usePositionsV2";
 
 // show all positions for a given vault
-const Positions = ({ vault }) => {
+const Positions = ({ vault, refresh, setRefresh }) => {
   const { account} = useWeb3React();
  
   //const history = usePositionsHistory(account, refresh);
-  let positions = usePositionsV2(account, vault.positionManagerV2)
+  let positions = usePositionsV2(account, vault.positionManagerV2, refresh)
 
   let price = useOraclePrice(vault);
   
   return (<>
     {
       positions.map((position)=>{
-        return <PositionsRowV2 key={vault.address} position={position} vault={vault} price={price} />
+        return <PositionsRowV2 key={vault.address} position={position} vault={vault} price={price} setRefresh={setRefresh} />
       })
     }
     </>)

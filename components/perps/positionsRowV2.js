@@ -6,7 +6,7 @@ import { CaretUpOutlined, CaretDownOutlined, ExportOutlined } from "@ant-design/
 import { ethers } from "ethers";
 
 
-const PositionsRowV2 = ({ position, vault, price }) => {
+const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
   /*
     struct Position {
       bool isCall;
@@ -91,7 +91,7 @@ const PositionsRowV2 = ({ position, vault, price }) => {
         </div>
       </td>
       <td style={tdStyle}>
-        <ClosePositionButton position={position} vault={vault} />
+        <ClosePositionButton position={position} vault={vault} setRefresh={setRefresh} />
       </td>
     </tr>
   );
