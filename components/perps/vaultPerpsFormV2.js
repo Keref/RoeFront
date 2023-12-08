@@ -196,7 +196,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
             <span style={{ float: "right"}}>{fundingRate.toFixed(4)}</span>
           </div>
 
-          <span style={{ fontWeight: "bold", }}>Size</span>
+          <span style={{ fontWeight: "bold", }}>Wager</span>
           <Input
             placeholder="Amount"
             suffix="USDC"
@@ -266,7 +266,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress }) => {
         <span style={{ fontSize: "small"}}>$ {(strikeX8/1e8).toString()}</span>
       </div>
       <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
-        <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Collateral (funding + fixed fee)</span>
+        <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Collateral (funding + reserved fee)</span>
         <span style={{ fontSize: "small"}}>$ {parseFloat(collateralAmount) + 4}</span>
       </div>
       <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
