@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Dropdown } from "antd";
+import { Button } from "antd";
 import { useSetChain } from "@web3-onboard/react";
 
 const NavChain = () => {
@@ -46,28 +46,32 @@ const NavChain = () => {
       key: '1',
       label: "Ethereum",
       icon: <img src="/icons/ethereum.svg" height={16} width={16} />
-    },*/
-    {
-      key: '31337',
-      label: "Localhost-Fork",
-      icon: <img src="/icons/arbitrum.svg" height={16} width={16} alt="Arbitrum Logo" />
     },
+    {
+      key: '1337',
+      label: "Arbitrum-Fork",
+      icon: <img src="/icons/polygon.svg" height={16} width={16} />
+    },*/
   ];
 
   let label = {};
   for (let k of items) if (k.key == chainId) label = k;
 
-  return(<>
-  <Dropdown menu={{ items, onClick }}>
-    <a onClick={(e) => e.preventDefault()}>
-      <Button style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 8, marginRight: 24}}
-        icon={label.icon}
-      >
-        {label.label ? label.label : 'Wrong Network'}
-      </Button>
-    </a>
-  </Dropdown>
-  </>)
+  return (
+    <Button
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        marginRight: 8,
+        gap: 8
+      }}
+      icon={label.icon}
+      onClick={()=>{onClick({key: "42161"})}}
+    >
+      {label.label ? label.label : "Wrong Network"}
+    </Button>
+  );
 };
 
 export default NavChain;
