@@ -56,8 +56,8 @@ const downloadImage = (blob, fileName) => {
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 36, marginTop: 12}}>
           <div>
-            Entry<br />
-            ${strike}
+            Activation<br />
+            ${(strike/1e8)}
           </div>
           <div>
             Market Price<br />

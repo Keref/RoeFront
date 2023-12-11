@@ -100,8 +100,8 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
         isCall ? 
           ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
           : ethers.utils.parseUnits(positionSize.toString(), vault.quoteToken.decimals);
-          
-      let collateralAmountAdj = ethers.utils.parseUnits(collateralAmount, vault.quoteToken.decimals);
+
+      let collateralAmountAdj = ethers.utils.parseUnits(parseFloat(collateralAmount).toString(), vault.quoteToken.decimals);
       // check allowance // dirty add the 4e6 fixed exercise fee
       let result = await quoteContract.allowance(account, vault.positionManagerV2);
       if ( result.lt(collateralAmountAdj + 4e6)) {
