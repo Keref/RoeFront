@@ -27,7 +27,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   // can request minPositionValueX8 from contract but it's fixed at $50 and wont likely change
   const [minPositionValue, setMinPositionValue] = useState(50);
   const minCollateralAmount = 1; // fixed in contract, min collateral $1
-  const [collateralAmount, setCollateralAmount] = useState(0);
+  const [collateralAmount, setCollateralAmount] = useState(1);
   const [showSuccessNotification, showErrorNotification, contextHolder] =
     useTxNotification();
   const pmContract = useContract(vault.positionManagerV2, GEPM_ABI);
@@ -38,7 +38,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   const oracleContract = useContract("0x2ce8FdFA67c78D1c313449819603AA52d3d2CC41", ORACLE_ABI);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
-  const [leverage, setLeverage] = useState(4)
+  const [leverage, setLeverage] = useState(6)
   const leverageGrid = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
   
   const positionSize = collateralAmount * leverageGrid[leverage-1];
@@ -71,7 +71,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
         let notionalAmount = 
           isCall ? 
             ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
-            : ethers.utils.parseUnits(positionSize, vault.quoteToken.decimals);
+            : ethers.utils.parseUnits( parseFloat(positionSize).toString(), vault.quoteToken.decimals);
         // the price is per unit, not for the whole notionalAmount. used to estimate utilizationRate accurately (higher utilization rate will push option price up)
 
         // function getOptionPrice(bool isCall, uint strike, uint size, uint timeToExpirySec) public view returns (uint optionPriceX8);
@@ -81,7 +81,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
           notionalAmount,
           21600 // 6h, time for streaming options
         );
-        console.log('option price ', optionPriceX8.toString(), price)
+        //console.log('option price ', optionPriceX8.toString(), price)
         // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
         setFundingRate(100 * optionPriceX8 / 6 / 1e8 / price);
       } catch(e) {
@@ -218,7 +218,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
                   title="Leverage"
                   style={{ border: "1px solid blue"}}
                   content={
-                    <div style={{ width: 250 }}>On GodEntry you are liquidated by time, not by price! <br/>No scam wicks, no Stop-Loss hunts ;)
+                    <div style={{ width: 250 }}>On GoodEntry you are liquidated by time, not by price! <br/>No scam wicks, no Stop-Loss hunts ;)
                     </div>
                   }
                 >
@@ -279,7 +279,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
       </div>
 
       <Button
-        type="default"
+        type="primary"
         onClick={openPosition}
         disabled={isOpenPositionButtonDisabled}
         danger={direction == "Short"}
