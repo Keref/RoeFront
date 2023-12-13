@@ -62,12 +62,13 @@ const PerpsV2 = () => {
                         <tr>
                           <th align="left" style={{...thStyle, paddingLeft: 0}}>Instrument</th>
                           <th align="left" style={thStyle}>Side</th>
+                          <th align="left" style={thStyle}>Wager</th>
                           <th align="left" style={thStyle}>Size</th>
                           <th align="left" style={thStyle}>
                             Funding{" "}
                             <Tooltip placement="right" title="Hourly funding rate">
                               <QuestionCircleOutlined />
-                            </Tooltip>
+                            </Tooltip> (Runway)
                           </th>
                           <th align="left" style={thStyle}>Entry Price</th>
                           <th align="left" style={thStyle}>PNL&nbsp;&nbsp;</th>

@@ -19,7 +19,8 @@ export default function usePositionsV2(account, pmAddress, refresh) {
         for (let k = 0; k < nftsLength; k++){
           const positionId = await pmContract.tokenOfOwnerByIndex(account, k)
           let n = await pmContract.getPosition(positionId)
-          nftsTmp.push({positionId: positionId, ...n})
+          let feesAccumulated = await pmContract.getFeesAccumulated(positionId)
+          nftsTmp.push({positionId: positionId, feesAccumulated: feesAccumulated, ...n})
           console.log()
           await setNfts(nftsTmp)
         }

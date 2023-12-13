@@ -29,18 +29,24 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
   let pnl = 0;
 
   if (position.isCall && price > strike){
-    pnl = position.notionalAmount * (price - strike) / 10**(vault.baseToken.decimals)
+    pnl += position.notionalAmount * (price - strike) / 10**(vault.baseToken.decimals)
   } else if (!position.isCall && price < strike){
-    pnl = (position.notionalAmount / strike ) * (strike - price) / 10**(vault.quoteToken.decimals)
+    pnl += (position.notionalAmount / strike ) * (strike - price) / 10**(vault.quoteToken.decimals)
   }
-  // remove the 4e6 from exercise fee
-  let pnlPercent = pnl / (position.collateralAmount - 4e6) * 100;
+
+  let pnlPercent = pnl / (position.collateralAmount - 4e6) * 1e8;
   let notionalUsd = position.isCall ? 
     ethers.utils.formatUnits(position.notionalAmount.mul(position.strike).div(1e8))
     : ethers.utils.formatUnits(position.notionalAmount, vault.quoteToken.decimals);
   // divide by 1e10 for scaling and 1e6 for usdc decimals * 100 for percent
   let fundingRate = position.data.mul(3600).toNumber() / notionalUsd / 1e14
-  
+  let initialCollateral = position.collateralAmount - 4e6;
+  let collateralAmount = initialCollateral - position.feesAccumulated; // - FIXED_EXERCISE_FEE
+  let runwayInSeconds = collateralAmount * 1e10 / position.data; // data is fundingRateX10
+  let runwayHours = Math.floor(runwayInSeconds / 3600)
+  let runwayMinutes = Math.floor((runwayInSeconds % 3600) / 60);
+
+
   const tdStyle = { paddingTop: 4, paddingBottom: 4 };
 
   return (
@@ -68,10 +74,16 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
         </span>
       </td>
       <td style={tdStyle}>
-        <span style={{fontWeight: 500 }}>${parseFloat(notionalUsd).toFixed(2)}</span>
+        <span style={{fontWeight: 500 }}>${parseFloat(initialCollateral / 1e6).toFixed(2)}</span>
       </td>
       <td style={tdStyle}>
-        {fundingRate.toFixed(4)}%
+        <span style={{fontWeight: 500 }}>
+          ${parseFloat(notionalUsd).toFixed(2)}{" "}
+          ({Math.round(parseFloat(notionalUsd).toFixed(2)/parseFloat(initialCollateral / 1e6))}x)
+        </span>
+      </td>
+      <td style={tdStyle}>
+        {fundingRate.toFixed(4)}% (<span style={{ fontSize: "small"}}>{runwayHours} h {runwayMinutes} min</span>)
       </td>
       <td style={tdStyle}>${ethers.utils.formatUnits(position.strike, 8)}</td>
       <td style={tdStyle}>
