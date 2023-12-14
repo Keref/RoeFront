@@ -12,7 +12,7 @@ const GeVaultBox = ({vault}) => {
   const theme = useTheme();
   const router = useRouter();
   const vaultDetails = useVaultV2(vault);
-  console.log('vaultDetails', vaultDetails)
+  //console.log('vaultDetails', vaultDetails)
 
   const toReadable = (value) => {
     if (value == 0) return 0;

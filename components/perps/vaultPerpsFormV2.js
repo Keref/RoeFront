@@ -30,11 +30,13 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   const [collateralAmount, setCollateralAmount] = useState(1);
   const [showSuccessNotification, showErrorNotification, contextHolder] =
     useTxNotification();
+    
+  
+  const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
   const pmContract = useContract(vault.positionManagerV2, GEPM_ABI);
-
   const vaultContract = useContract(vault.vaultV2, GEV_ABI);
   const quoteContract = useContract(vault.quoteToken.address, ERC20_ABI)
-  const strikeContract = useContract(strikeManagerAddress, StrikeManager_ABI)
+  const strikeContract = new ethers.Contract(strikeManagerAddress, StrikeManager_ABI, customProvider);
   const oracleContract = useContract("0x2ce8FdFA67c78D1c313449819603AA52d3d2CC41", ORACLE_ABI);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
@@ -42,6 +44,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   const leverageGrid = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
   
   const positionSize = collateralAmount * leverageGrid[leverage-1];
+  
   
   // Get user's USDC balance
   useEffect(() => {
