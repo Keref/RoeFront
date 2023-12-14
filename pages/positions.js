@@ -81,8 +81,8 @@ const Positions = () => {
           Object.keys(stats).map( i => { return (<div>
             <strong>Vault {stats[i].name}</strong><br/>
             Positions: {stats[i].totalSupply} NFTs<br/>
-            Call rate: {stats[i].callUtilizationRate}%<br/>
-            Call rate: {stats[i].putUtilizationRate}%<br/>
+            Call u.rate: {stats[i].callUtilizationRate}%<br/>
+            Put u.rate: {stats[i].putUtilizationRate}%<br/>
           </div>) })
         }
       </div>
