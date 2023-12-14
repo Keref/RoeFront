@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 // Display all user assets and positions in all ROE LPs
 const Positions = () => {
   const [positions, setPositions] = useState([])
+  const [stats, setStats] = useState({})
   const ADDRESSES = useAddresses();
   let vaults = ADDRESSES["lendingPools"];
   const { library, account, chainId } = useWeb3React();
@@ -15,33 +16,48 @@ const Positions = () => {
   useEffect(()=>{
     const getData = async() => {
       console.log(vaults, library, account)
+      let stat = {}
       let pos = []
       for (let vault of vaults){
-        console.log('get',vault.address, library )
         let pmContract = new ethers.Contract(vault.positionManagerV2, GEPM_ABI, library.getSigner(account));
-        console.log('hasNFTs ', await pmContract.totalSupply())
         let nftSupply = await pmContract.totalSupply();
 
+        stat[vault.address] = {"totalSupply": nftSupply.toNumber(), "name": vault.name}
         for (let k = 0; k< nftSupply; k++){
           let positionId = await pmContract.tokenByIndex(k);
           let onePos = await pmContract.getPosition(positionId)
           
-          console.log('kakui', {positionId: positionId, ...onePos})
           // optionType == 0: fixed option: data field gives endDate, after which 3rd party can close
           // OptionType == 1: streaming: function getFeesAccumulated(uint tokenId) public view returns (uint feesAccumulated), if feesAccumulated > collateralAmount -> can liquidate
           // feesDue >= position.collateralAmount - FIXED_EXERCISE_FEE // can get FIXED_EXERCISE_FEE with pm.getParameters, now it is 4e6 = 4 USDC
-          console.log('op', onePos.optionType == 1)
           let feesAccumulated = onePos.optionType == 1 ? await pmContract.getFeesAccumulated(positionId) : 0
-
-          pos.push({positionId: positionId, pmAddress: vault.positionManagerV2, name: vault.name, feesAccumulated: feesAccumulated, ...onePos})
+          let notionalDecimals = onePos.isCall ? vault.baseToken.decimals : vault.quoteToken.decimals
+          let realEndDate = onePos.endDate
+          if (onePos.optionType == 1){
+            let runway = (onePos.collateralAmount - 4e6 - feesAccumulated) / onePos.data * 1e10;
+            realEndDate = new Date().getTime() + runway * 1000;
+            
+          }
+ 
+          pos.push({
+            positionId: positionId, 
+            pmAddress: vault.positionManagerV2, 
+            name: vault.name, 
+            feesAccumulated: feesAccumulated, 
+            notionalDecimals: notionalDecimals,
+            realEndDate: realEndDate,
+            ...onePos
+          })
         }
-        setPositions(pos)
       }
+      setPositions(pos)
+      setStats(stat)
       
     }
     if(library && account) getData()
   }, [vaults.length, account])
   console.log("positions", positions)
+  console.log("stats", stats)
   
   
   const closePosition = async (pmAddress, positionId) => {
@@ -50,20 +66,24 @@ const Positions = () => {
   }
   
   return (<div style={{ minWidth: 1200, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-    <img src="/images/1500x500.jpg" alt="GoodEntry Banner" width="800" style={{borderRadius: 5}}/>
+    <img src="/images/1500x500.jpg" alt="GoodEntry Banner" width="300" height="100" style={{borderRadius: 5}}/>
 
-    <Card style={{ width: 800, marginTop: 24}} >
-
+    <Card style={{ width: 1200, marginTop: 24}} >
+      {
+        Object.keys(stats).map( i => { return (<div>Vault {stats[i].name}: {stats[i].totalSupply} NFTs</div>) })
+      }
       <table>
         <thead>
           <tr>
-            <th align="left">PM</th>
+            <th align="left">Vault</th>
             <th align="left">PosId</th>
-            <th align="left">OptionType</th>
+            {/*<th align="left">Type</th>*/}
+            <th align="left">Ticker</th>
+            <th align="left">Notional</th>
+            <th align="left">Collat.$</th>
+            <th align="left">Fees.Accum</th>
             <th align="left">StartDate</th>
             <th align="left">EndDate</th>
-            <th align="left">Collat</th>
-            <th align="left">Fees.Accum</th>
             <th align="right">Action</th>
           </tr>
         </thead>
@@ -77,16 +97,18 @@ const Positions = () => {
               } else if (p.optionType == 1){
                 if (p.feesAccumulated > p.collateralAmount - 4e6) canLiq = true
               }
-              console.log('canliqu', canLiq)
+console.log(p)
               let k = p.pmAddress+p.positionId.toString();
               return (<tr key={k}>
                 <td>{p.name}</td>
                 <td>{p.positionId.toString()}</td>
-                <td>{p.optionType.toString()}</td>
-                <td>{p.startDate.toString()}</td>
-                <td>{p.optionType==0 ? p.data.toString() : "-"}</td>
-                <td>{(p.collateralAmount - 4e6).toString()}</td>
-                <td>{p.feesAccumulated.toString()}</td>
+                  {/*<td>{p.optionType.toString()}</td>*/}
+                <td>{p.isCall ? "long":"short"} {(p.strike / 1e8)}</td>
+                <td>{(p.notionalAmount / 10**p.notionalDecimals).toFixed(4).replace(/\.0+$/, '')}</td>
+                <td>{((p.collateralAmount - 4e6)/1e6).toString()}</td>
+                <td>{p.feesAccumulated.toString()} ({(100*p.feesAccumulated/(p.collateralAmount - 4e6)).toFixed(2)}%)</td>
+                <td>{new Date(p.startDate*1000).toLocaleString()}</td>
+                <td>{new Date(p.realEndDate).toLocaleString()}</td>
                 <td align="right">
                   <button style={{ border: 0, backgroundColor: (canLiq ? "green" : "gray")}} onClick={()=>{closePosition(p.pmAddress, p.positionId)}} >Close</button>
                 </td>
