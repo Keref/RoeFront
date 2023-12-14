@@ -21,8 +21,15 @@ const Positions = () => {
       for (let vault of vaults){
         let pmContract = new ethers.Contract(vault.positionManagerV2, GEPM_ABI, library.getSigner(account));
         let nftSupply = await pmContract.totalSupply();
+        let callUtilizationRate = await pmContract.getUtilizationRate(true, 0)
+        let putUtilizationRate = await pmContract.getUtilizationRate(false, 0)
 
-        stat[vault.address] = {"totalSupply": nftSupply.toNumber(), "name": vault.name}
+        stat[vault.address] = {
+          totalSupply: nftSupply.toNumber(), 
+          name: vault.name,          
+          callUtilizationRate: callUtilizationRate.toNumber(),
+          putUtilizationRate: putUtilizationRate.toNumber(),
+        }
         for (let k = 0; k< nftSupply; k++){
           let positionId = await pmContract.tokenByIndex(k);
           let onePos = await pmContract.getPosition(positionId)
@@ -69,9 +76,16 @@ const Positions = () => {
     <img src="/images/1500x500.jpg" alt="GoodEntry Banner" width="300" height="100" style={{borderRadius: 5}}/>
 
     <Card style={{ width: 1200, marginTop: 24}} >
-      {
-        Object.keys(stats).map( i => { return (<div>Vault {stats[i].name}: {stats[i].totalSupply} NFTs</div>) })
-      }
+      <div style={{display: "flex", direction: "row", gap: 48}}>
+        {
+          Object.keys(stats).map( i => { return (<div>
+            <strong>Vault {stats[i].name}</strong><br/>
+            Positions: {stats[i].totalSupply} NFTs<br/>
+            Call rate: {stats[i].callUtilizationRate}%<br/>
+            Call rate: {stats[i].putUtilizationRate}%<br/>
+          </div>) })
+        }
+      </div>
       <table>
         <thead>
           <tr>
@@ -97,7 +111,7 @@ const Positions = () => {
               } else if (p.optionType == 1){
                 if (p.feesAccumulated > p.collateralAmount - 4e6) canLiq = true
               }
-console.log(p)
+
               let k = p.pmAddress+p.positionId.toString();
               return (<tr key={k}>
                 <td>{p.name}</td>
