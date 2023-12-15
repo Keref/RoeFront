@@ -5,7 +5,6 @@ import { RiseOutlined, FallOutlined, QuestionCircleOutlined} from "@ant-design/i
 import GEPM_ABI from "../../contracts/GoodEntryPositionManager.json";
 import GEV_ABI from "../../contracts/GoodEntryVault.json";
 import ERC20_ABI from "../../contracts/ERC20.json";
-import ORACLE_ABI from "../../contracts/GoodEntryOracle.json";
 import StrikeManager_ABI from "../../contracts/StrikeManager.json";
 import useContract from "../../hooks/useContract";
 import { ethers } from "ethers";
@@ -37,7 +36,6 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   const vaultContract = useContract(vault.vaultV2, GEV_ABI);
   const quoteContract = useContract(vault.quoteToken.address, ERC20_ABI)
   const strikeContract = new ethers.Contract(strikeManagerAddress, StrikeManager_ABI, customProvider);
-  const oracleContract = useContract("0x2ce8FdFA67c78D1c313449819603AA52d3d2CC41", ORACLE_ABI);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
   const [leverage, setLeverage] = useState(6)
