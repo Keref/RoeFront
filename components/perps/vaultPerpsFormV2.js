@@ -115,6 +115,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
       
       // function openStreamingPosition(bool isCall, uint notionalAmount, uint collateralAmount) external returns (uint tokenId)
       const { hash } = await pmContract.openStreamingPosition(isCall, notionalAmount, collateralAmountAdj);
+      await delay(4000)
       refresh(new Date().getTime())
       showSuccessNotification(
         "Position opened",
