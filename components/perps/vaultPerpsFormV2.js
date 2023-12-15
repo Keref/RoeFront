@@ -49,10 +49,11 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   // Get user's USDC balance
   useEffect(() => {
     const getData = async () => {
-      setQuoteBalance(await quoteContract.balanceOf(account)); 
+      let quoteBal = await quoteContract.balanceOf(account);
+      setQuoteBalance(ethers.utils.formatUnits(quoteBal, vault.quoteToken.decimals)); 
     }
-    if (account && vaultContract && quoteContract) getData();
-  }, [account, vaultContract, quoteContract])
+    if (account && quoteContract) getData();
+  }, [account, quoteContract])
 
   // Get closest strike based on current pair price
   useEffect(() => {
@@ -127,15 +128,16 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
     setSpinning(false);
   };
 
-
+  let collateralBelowBalance = parseFloat(quoteBalance) < parseFloat(collateralAmount) + 4;
   let positionBelowMin = minPositionValue > positionSize
   let collateralBelowMin = minCollateralAmount > collateralAmount
-  const isOpenPositionButtonDisabled = parseFloat(positionSize) == 0 || positionBelowMin || collateralBelowMin;
+  const isOpenPositionButtonDisabled = parseFloat(positionSize) == 0 || positionBelowMin || collateralBelowMin || collateralBelowBalance;
 
   let openPositionButtonErrorTitle = "Open " + direction;
   if (parseFloat(collateralAmount) > 0 && parseFloat(positionSize) > 0){
     if (positionBelowMin) openPositionButtonErrorTitle = "Position size too Low";
     else if (collateralBelowMin) openPositionButtonErrorTitle = "Collateral amount too Low";
+    else if (collateralBelowBalance) openPositionButtonErrorTitle = "Not enough funds";
   }
   
   // runway: hourly funding funding * size = hourly cost, runway in hours = collateral amount / hourly cost
