@@ -146,6 +146,8 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   let runway = hourlyCost == 0 ? 0 : parseFloat(collateralAmount) / hourlyCost
   let runwayHours = Math.floor(runway)
   let runwayMinutes = Math.floor((runway - runwayHours) * 60);
+  
+  let step = 10**Math.ceil(Math.log10(strikeX8 / 1e8) - 3)
 
   return (
   <>
@@ -298,7 +300,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
       </Button>
     </Card>
     <Card>
-      <PayoutChart direction={direction} price={price} strike={strikeX8/1e8} step={Math.floor(price/100)} />
+      <PayoutChart direction={direction} price={price} strike={strikeX8/1e8} step={step} />
     </Card>
   </>
   );
