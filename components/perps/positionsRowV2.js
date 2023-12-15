@@ -39,7 +39,7 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
     ethers.utils.formatUnits(position.notionalAmount.mul(position.strike).div(1e8))
     : ethers.utils.formatUnits(position.notionalAmount, vault.quoteToken.decimals);
   // divide by 1e10 for scaling and 1e6 for usdc decimals * 100 for percent
-  let fundingRate = position.data.mul(3600).toNumber() / notionalUsd / 1e14
+  let fundingRate = parseFloat(position.data.mul(3600).toString()) / notionalUsd / 1e14
   let initialCollateral = position.collateralAmount - 4e6;
   let collateralAmount = initialCollateral - position.feesAccumulated; // - FIXED_EXERCISE_FEE
   let runwayInSeconds = collateralAmount * 1e10 / position.data; // data is fundingRateX10
