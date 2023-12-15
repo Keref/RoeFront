@@ -57,10 +57,10 @@ export default function TradingViewWidget({width, height, symbol}) {
 
       function createWidget() {
         if (document.getElementById('chart_container') && 'TradingView' in window) {
-          console.log(window.TradingView)
+          //console.log(window.TradingView)
           var tv = new window.TradingView.widget(widgetOptions);
           // var tv = new window.TradingView.chart(chartOptions);
-          console.log(tv)
+          //console.log(tv)
         }
         
       }
