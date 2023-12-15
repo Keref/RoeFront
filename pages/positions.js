@@ -78,7 +78,7 @@ const Positions = () => {
     <Card style={{ width: 1200, marginTop: 24}} >
       <div style={{display: "flex", direction: "row", gap: 48}}>
         {
-          Object.keys(stats).map( i => { return (<div>
+          Object.keys(stats).map( i => { return (<div key={stats[i].name}>
             <strong>Vault {stats[i].name}</strong><br/>
             Positions: {stats[i].totalSupply} NFTs<br/>
             Call u.rate: {stats[i].callUtilizationRate}%<br/>
