@@ -33,6 +33,7 @@ const Positions = () => {
         for (let k = 0; k< nftSupply; k++){
           let positionId = await pmContract.tokenByIndex(k);
           let onePos = await pmContract.getPosition(positionId)
+          let owner = await pmContract.ownerOf(positionId)
           
           // optionType == 0: fixed option: data field gives endDate, after which 3rd party can close
           // OptionType == 1: streaming: function getFeesAccumulated(uint tokenId) public view returns (uint feesAccumulated), if feesAccumulated > collateralAmount -> can liquidate
@@ -53,6 +54,7 @@ const Positions = () => {
             feesAccumulated: feesAccumulated, 
             notionalDecimals: notionalDecimals,
             realEndDate: realEndDate,
+            owner: owner,
             ...onePos
           })
         }
@@ -63,8 +65,6 @@ const Positions = () => {
     }
     if(library && account) getData()
   }, [vaults.length, account])
-  console.log("positions", positions)
-  console.log("stats", stats)
   
   
   const closePosition = async (pmAddress, positionId) => {
@@ -115,7 +115,7 @@ const Positions = () => {
               let k = p.pmAddress+p.positionId.toString();
               return (<tr key={k}>
                 <td>{p.name}</td>
-                <td>{p.positionId.toString()}</td>
+            <td><a href={"https://arbiscan.io/address/"+p.owner}>{p.positionId.toString()}</a></td>
                   {/*<td>{p.optionType.toString()}</td>*/}
                 <td>{p.isCall ? "long":"short"} {(p.strike / 1e8)}</td>
                 <td>{(p.notionalAmount / 10**p.notionalDecimals).toFixed(4).replace(/\.0+$/, '')}</td>
