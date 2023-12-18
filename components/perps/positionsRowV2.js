@@ -33,6 +33,8 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
   } else if (!position.isCall && price < strike){
     pnl += (position.notionalAmount / strike ) * (strike - price) / 10**(vault.quoteToken.decimals)
   }
+  // sub spent premium
+  pnl -= position.feesAccumulated / 10**(vault.quoteToken.decimals)
 
   let pnlPercent = pnl / (position.collateralAmount - 4e6) * 1e8;
   let notionalUsd = position.isCall ? 
