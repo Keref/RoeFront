@@ -48,7 +48,6 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
   let runwayHours = Math.floor(runwayInSeconds / 3600)
   let runwayMinutes = Math.floor((runwayInSeconds % 3600) / 60);
 
-
   const tdStyle = { paddingTop: 4, paddingBottom: 4 };
 
   return (
@@ -90,18 +89,22 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
       <td style={tdStyle}>${ethers.utils.formatUnits(position.strike, 8)}</td>
       <td style={tdStyle}>
         <div style={{ display: 'flex', alignItems: 'center'}}>
-          <div style={{ marginRight: 8}}>
-            <span style={{ color: pnl >= 0 ? "#55d17c" : "#e57673" }}>
-              {pnl == 0 ? <></> : (pnl > 0 ? <CaretUpOutlined /> : <CaretDownOutlined />)}
-              {pnlPercent.toFixed(2)}%
-            </span>
-            <br />
-            {" "}${(isNaN(pnl) ? 0 : pnl).toFixed(3)}
-          </div>
-          
-          <PnlPopup token0={vault.baseToken} direction={direction} pnl={pnl} pnlPercent={pnlPercent} strike={position.strike.toString()} price={price} >
-            <ExportOutlined />
-          </PnlPopup>
+          { price > 0 ? <>
+              <div style={{ marginRight: 8}}>
+                <span style={{ color: pnl >= 0 ? "#55d17c" : "#e57673" }}>
+                  {pnl == 0 ? <></> : (pnl > 0 ? <CaretUpOutlined /> : <CaretDownOutlined />)}
+                  {pnlPercent.toFixed(2)}%
+                </span>
+                <br />
+                {" "}${(isNaN(pnl) ? 0 : pnl).toFixed(3)}
+              </div>           
+              <PnlPopup token0={vault.baseToken} direction={direction} pnl={pnl} pnlPercent={pnlPercent} strike={position.strike.toString()} price={price} >
+                <ExportOutlined />
+              </PnlPopup>
+            </>
+            :  <>-</>
+          }
+
         </div>
       </td>
       <td style={tdStyle}>
