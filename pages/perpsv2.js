@@ -103,13 +103,7 @@ const PerpsV2 = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {
-                          vaults.map( vault => {
-                            return (
-                              <PositionsHistory key={vault.address} account={account} vault={vault} refresh={refreshCounter} />
-                            )
-                          })
-                        }
+                         <PositionsHistory account={account} refresh={refreshCounter} />
                       </tbody>
                     </table>
                 },

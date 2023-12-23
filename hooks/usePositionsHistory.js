@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 
-const usePositionsHistory = (account, vault, refresh) => {
+const usePositionsHistory = (account, refresh) => {
   const [data, setdata] = useState([]);
   // get 
   /* https://api.arbiscan.io/api?module=logs&action=getLogs
@@ -30,8 +30,8 @@ const usePositionsHistory = (account, vault, refresh) => {
         console.log("PositionsHistory data", e)
       }
     }
-    if (account && vault) getData();
-  }, [account, vault, refresh]);
+    if (account) getData();
+  }, [account, refresh]);
   return data;
 }
 

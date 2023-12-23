@@ -1,11 +1,19 @@
 import { ethers } from "ethers";
 import {useState, useEffect} from "react"
 import useContract from "../../hooks/useContract";
+import useAddresses from "../../hooks/useAddresses";
 import GoodEntryPositionManager_ABI from "../../contracts/GoodEntryPositionManager.json";
 
 
-const HistoryTx = ({tx, vault}) => {
+const HistoryTx = ({tx}) => {
   const [position, setPosition] = useState({})
+
+  let addresses = useAddresses()
+  let vault = {}
+  
+  for (let v of addresses.lendingPools){
+    if (v.positionManagerV2.toLowerCase() == tx.address.toLowerCase()) vault = v
+  }
 
   const iface = new ethers.utils.Interface(["event ClosedPosition(address indexed user, address closer, uint tokenId, int pnl)"])
   const data = iface.decodeEventLog("ClosedPosition", tx.data)
@@ -23,7 +31,7 @@ const HistoryTx = ({tx, vault}) => {
 
     if (vault.positionManagerV2 && pmContract) getPosition();
   }, [data.tokenId.toNumber(), vault.positionManagerV2, pmContract]);
-  
+
   if (position.startDate == 0) return <></>
   
   //console.log(tx.transactionHash, position, position.notionalAmount.toString(), data)

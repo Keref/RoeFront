@@ -1,7 +1,7 @@
 import usePositionsHistory from "../../hooks/usePositionsHistory";
 import HistoryTx from "./historyTx";
 
-const PositionsHistory = ({ account, vault, refresh }) => {
+const PositionsHistory = ({ account, refresh }) => {
   
   const thStyle = {
     color: "#94A3B8",
@@ -12,12 +12,13 @@ const PositionsHistory = ({ account, vault, refresh }) => {
     textDecorationLine: 'underline'
   }
   
-  const history = usePositionsHistory(account, vault, refresh);
+  const history = usePositionsHistory(account, refresh);
+  console.log('historor', history)
 
   return (<>
         {
           history ? [...history].reverse().map( tx => {
-            return (<HistoryTx key={tx.hash} tx={tx} vault={vault} />);
+            return (<HistoryTx key={tx.transactionHash} tx={tx}  />);
           }) : <></>
         }
   </>)
