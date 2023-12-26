@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Spin } from "antd";
+import { Button, Spin, Popover } from "antd";
+import { WarningOutlined} from "@ant-design/icons";
 import GEPM_ABI from "../../contracts/GoodEntryPositionManager.json";
 import useContract from "../../hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
@@ -10,7 +11,7 @@ const sleep = (milliseconds) => {
   return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-const ClosePositionButton = ({ vault, position, setRefresh }) => {
+const ClosePositionButton = ({ vault, position, setRefresh, warning }) => {
   const { account } = useWeb3React();
   const [isSpinning, setSpinning] = useState(false);
   const [showSuccessNotification, showErrorNotification, contextHolder] =
@@ -42,9 +43,25 @@ const ClosePositionButton = ({ vault, position, setRefresh }) => {
       {isSpinning ? (
         <Spin />
       ) : (
-        <Button size="small" onClick={closePosition}>
-          Close
-        </Button>
+        <>
+          <Button size="small" onClick={closePosition}>
+            Close
+          { 
+            warning > 0 ?
+              <Popover
+                placement="top"
+                title="Early Close"
+                style={{ border: "1px solid blue"}}
+                content={
+                  <div style={{ width: 250 }}>The minimum fee perceived is 1h30 of funding. <br/>Your total funding fees {warning / 1e6} USDC</div>
+                }
+              >
+                <WarningOutlined style={{ color: "#e57673"}}  />
+              </Popover>
+              : <></>
+          }
+          </Button>
+        </>
       )}
     </>
   );

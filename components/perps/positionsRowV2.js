@@ -108,7 +108,7 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
         </div>
       </td>
       <td style={tdStyle}>
-        <ClosePositionButton position={position} vault={vault} setRefresh={setRefresh} />
+        <ClosePositionButton position={position} vault={vault} setRefresh={setRefresh} warning={position.feesAccumulated < position.feesMin ? position.feesMin : 0} />
       </td>
     </tr>
   );
