@@ -74,23 +74,17 @@ const GeVaultBox = ({vault}) => {
               }}
             >
               Projected APR{" "}
-                {/*<Popover
+                <Popover
                 placement="right"
-                title="APR"
+                title="Projected Fees"
                 content={
                   <div style={{ width: 250 }}>
-                    Supply Interest:{" "}
-                    <span style={{ float: "right" }}>{parseFloat(vaultDetails.supplyApr).toFixed(2)} %</span>
-                    <br />
-                    V3 Fees (7d annualized):{" "}
-                    <span style={{ float: "right" }}>{parseFloat(vaultDetails.feeApr).toFixed(2)} %</span>
-                    <br />
-                    Token Incentives: <span style={{ float: "right" }}>{parseFloat(vaultDetails.airdropApr).toFixed(2)} %</span>
+                    Projected fees APR excluding payouts, based on past 2 days perceived premiums
                   </div>
                 }
               >
                 <QuestionCircleOutlined />
-                </Popover>*/}
+                </Popover>
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
               {(parseFloat(vaultDetails.feeApr)).toFixed(2)} %

@@ -16,17 +16,15 @@ export default function useVaultV2(vault) {
   const [maxTvl, setMaxTvl] = useState(0);
   const [fee0, setFee0] = useState(0);
   const [fee1, setFee1] = useState(0);
+  const [feeApr, setApr] = useState(0);
   const [userBalance, setUserBalance] = useState(0);
   const [userValue, setUserValue] = useState(0);
   const [totalSupply, setTotalSupply] = useState(0);
   const { account } = useWeb3React();
   const address = vault.address;
-  const vaultV2Contract = useContract(address, VAULTV2_ABI);
-  const goodStats = useGoodStats();
-
-  const feeApr = goodStats && goodStats[statsPeriod][address] ? parseFloat(goodStats[statsPeriod][address].feesRate) : 0;
-
-
+  
+  const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
+  const vaultV2Contract = new ethers.Contract(address, VAULTV2_ABI, customProvider);
 
   var data = {
     address: address,
@@ -47,11 +45,11 @@ export default function useVaultV2(vault) {
   
   useEffect( () => {
     const getData = async () => {
-      try {
+      //try {
         let tS = await vaultV2Contract.totalSupply()
         let tSupply = ethers.utils.formatUnits(tS, 18);
         setTotalSupply(tSupply);
-        
+
         let tReserves = await vaultV2Contract.getReserves();
         let tValue = ethers.utils.formatUnits(tReserves.valueX8, 8);
         setReserves(tReserves);
@@ -64,24 +62,31 @@ export default function useVaultV2(vault) {
         setMaxTvl(tCap);
         
         // past fees, need to redeploy feeStreamer update
-        // let basePrice = ethers.utils.formatUnits(await vaultV2Contract.basePrice(), 8)
-        // let today = Math.floor(new Date().getTime() / 86400000)
-        // let yesterdayFees = await vaultV2Contract.getPastFees(today-1); // get [baseFees, quoteFees]
-        // let fees = yesterdayFees[0] / 10**vault.baseToken.decimals * basePrice + yesterdayFees
-        // setApr(  )
+        let basePrice = await vaultV2Contract.getBasePrice();
+        let price = ethers.utils.formatUnits(basePrice, 8)
+        let today = Math.floor(new Date().getTime() / 86400000)
+
+        let yester1Fees = await vaultV2Contract.getPastFees(today-1); // get [baseFees, quoteFees]
+        let yester2Fees = await vaultV2Contract.getPastFees(today-2); // get [baseFees, quoteFees]
+
+        let totalFees2Days = (yester1Fees[0].add(yester2Fees[0])) / 10**vault.baseToken.decimals * basePrice + (yester1Fees[1].add(yester2Fees[1]) * 100)
+        let apr_ = totalFees2Days / tReserves.valueX8 * 36500 / 2;
+        setApr(apr_)
         
-        setFee0( (await vaultV2Contract.getAdjustedBaseFee(true) )/100 );
-        setFee1( (await vaultV2Contract.getAdjustedBaseFee(false) )/100 );
-      }
+        let f0 = await vaultV2Contract.getAdjustedBaseFee(true);
+        let f1 = await vaultV2Contract.getAdjustedBaseFee(false);
+        setFee0(f0/100);
+        setFee1(f1/100);
+      /*}
       catch(e){
         console.log("useVaultV2", vaultV2Contract.address, e)
-      }
+      }*/
     }
     
     if (address && vaultV2Contract) {
       getData()
     }
-  }, [address, vaultV2Contract])
+  }, [address])
 
   return data;
 }
