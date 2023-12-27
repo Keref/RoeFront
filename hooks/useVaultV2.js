@@ -24,6 +24,7 @@ export default function useVaultV2(vault) {
   const address = vault.address;
   
   const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
+  const vaultV2ContractWithSigner = useContract(address, VAULTV2_ABI);
   const vaultV2Contract = new ethers.Contract(address, VAULTV2_ABI, customProvider);
 
   var data = {
@@ -38,7 +39,7 @@ export default function useVaultV2(vault) {
     totalApr: 0,
     wallet: userBalance,
     walletValue: userValue,
-    contract: vaultV2Contract,
+    contract: vaultV2ContractWithSigner,
     reserves: reserves,
     icon: "/icons/" + vault.name.toLowerCase() + ".svg",
   }
