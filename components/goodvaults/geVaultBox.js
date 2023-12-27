@@ -79,7 +79,7 @@ const GeVaultBox = ({vault}) => {
                 title="Projected Fees"
                 content={
                   <div style={{ width: 250 }}>
-                    Projected fees APR excluding payouts, based on past 2 days perceived premiums
+                    Projected fees APR excluding payouts, based on past 2 days perceived GoodEntry premiums + underlying AMM fees.
                   </div>
                 }
               >
