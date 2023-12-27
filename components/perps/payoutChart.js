@@ -1,4 +1,3 @@
-import useTheme from '../../hooks/useTheme'
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
   Chart,
@@ -23,7 +22,6 @@ Chart.register(
 );
 
 const PayoutChart = ({direction, price, strike, step}) => {
-  const theme = useTheme();
   var steps = []
   
   for (let k=-3+(strike<price?1:0); k<3+(strike<price?1:0); k++){

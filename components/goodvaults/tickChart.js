@@ -1,4 +1,3 @@
-import useTheme from '../../hooks/useTheme';
 import useGoodStats from '../../hooks/useGoodStats';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
@@ -22,7 +21,6 @@ Chart.register(
 );
 
 const TickChart = ({vault, gevault}) => {
-  const theme = useTheme();
   const goodStats = useGoodStats();
 
   const options = {

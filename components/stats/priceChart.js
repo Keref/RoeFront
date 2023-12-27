@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useTheme from "../../hooks/useTheme";
 import axios from "axios";
 import {
   Chart,
@@ -25,7 +24,6 @@ Chart.register(
 
 const StatsChart = ({vault, showPriceNotFees, gevault}) => {
   const [geData, setGeData] = useState([])
-  const theme = useTheme();
   
   useEffect(() => {
     const getData = async () => {

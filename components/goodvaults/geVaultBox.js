@@ -5,11 +5,9 @@ import Slider from "../design/slider";
 import { useRouter } from 'next/router';
 import useVaultV2 from "../../hooks/useVaultV2";
 import useAssetData from "../../hooks/useAssetData";
-import useTheme from "../../hooks/useTheme";
 
 const GeVaultBox = ({vault}) => {
   const [highlightBox, setHighlightBox] = useState(false);
-  const theme = useTheme();
   const router = useRouter();
   const vaultDetails = useVaultV2(vault);
   //console.log('vaultDetails', vaultDetails)

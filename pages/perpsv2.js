@@ -10,13 +10,11 @@ import Chart from "../components/perps/chart";
 import TradingViewWidget from "../components/perps/tv";
 import useAddresses from "../hooks/useAddresses";
 import useOraclePrice from "../hooks/useOraclePrice";
-import useTheme from "../hooks/useTheme";
 import { useWeb3React } from "@web3-react/core";
 
 // Display all user assets and positions in all ROE LPs
 const PerpsV2 = () => {
   const { account} = useWeb3React();
-  const theme = useTheme()
   // only works for ARB in testing no other vault
   const [currentVault, selectVault] = useState(0);
   const [refreshCounter, setRefreshCounter] = useState(0);

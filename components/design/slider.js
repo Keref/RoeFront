@@ -1,10 +1,7 @@
 import { Slider as ASlider } from "antd";
-import useTheme from "../../hooks/useTheme";
 
 
 const Slider = (props) => {
-  const theme = useTheme();
-  
   return (
     <ASlider
       {...props} 
