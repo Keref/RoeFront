@@ -23,9 +23,7 @@ export default function useVaultV2(vault) {
   const { account } = useWeb3React();
   const address = vault.address;
   
-  const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
   const vaultV2ContractWithSigner = useContract(address, VAULTV2_ABI);
-  const vaultV2Contract = new ethers.Contract(address, VAULTV2_ABI, customProvider);
 
   var data = {
     address: address,
@@ -46,7 +44,10 @@ export default function useVaultV2(vault) {
   
   useEffect( () => {
     const getData = async () => {
-      //try {
+      try {
+        const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
+        const vaultV2Contract = new ethers.Contract(address, VAULTV2_ABI, customProvider);
+        
         let tS = await vaultV2Contract.totalSupply()
         let tSupply = ethers.utils.formatUnits(tS, 18);
         setTotalSupply(tSupply);
@@ -78,15 +79,13 @@ export default function useVaultV2(vault) {
         let f1 = await vaultV2Contract.getAdjustedBaseFee(false);
         setFee0(f0/100);
         setFee1(f1/100);
-      /*}
+      }
       catch(e){
         console.log("useVaultV2", vaultV2Contract.address, e)
-      }*/
+      }
     }
     
-    if (address && vaultV2Contract) {
-      getData()
-    }
+    if (address) getData()
   }, [address])
 
   return data;
