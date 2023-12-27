@@ -81,7 +81,7 @@ export default function useVaultV2(vault) {
         setFee1(f1/100);
       }
       catch(e){
-        console.log("useVaultV2", vaultV2Contract.address, e)
+        console.log("useVaultV2", address, e)
       }
     }
     

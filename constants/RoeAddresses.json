@@ -7,6 +7,23 @@
     "goodEntryCore": "0xdDeC418c1a825Ac09aD83cc1A28a2c5Bcd746050",
     "lendingPools": [
       {
+        "name": "ETH-USDC",
+        "address": "0xd666156C473Cc9539CAaCc112B3A3590a895C861",
+        "positionManagerV2": "0x0f652aAd7993D48bd6E876829aEDC068507a6cE3",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
+        "tvSymbol" : "BYBIT:ETHUSDC",
+        "baseToken": {
+          "name": "ETH",
+          "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+          "decimals": 18
+        },
+        "quoteToken": {
+          "name": "USDC.e",
+          "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+          "decimals": 6
+        }
+      },
+      {
         "name": "ETH-USDC.e",
         "address": "0x36003A975bFC56f650590C26B1479ba423217931",
         "positionManagerV2": "0x8c037eF65e1B3d2094AC75c301e2b1e6eA7e3D67",
@@ -15,6 +32,23 @@
         "baseToken": {
           "name": "ETH",
           "address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+          "decimals": 18
+        },
+        "quoteToken": {
+          "name": "USDC.e",
+          "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+          "decimals": 6
+        }
+      },
+      {
+        "name": "ARB-USDC",
+        "address": "0x419ae989a629Cc71834BDf6E3e8E33c9c3ED3Bb4",
+        "positionManagerV2": "0x73cfCbD36C0bb5574f6062279b6076C5e321A4E2",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ARBUSDT&interval=",
+        "tvSymbol" : "BYBIT:ARBUSDC",
+        "baseToken": {
+          "name": "ARB",
+          "address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
           "decimals": 18
         },
         "quoteToken": {
@@ -37,6 +71,40 @@
         "quoteToken": {
           "name": "USDC.e",
           "address": "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8",
+          "decimals": 6
+        }
+      },
+      {
+        "name": "GMX-USDC",
+        "address": "0x21EB68Cc5a5d51b48e0DE743f321151523b7A15D",
+        "positionManagerV2": "0xc03Ff47C5b9e437A573e927aF8b268dF892e4c14",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=GMXUSDT&interval=",
+        "tvSymbol" : "BYBIT:GMXUSDT",
+        "baseToken": {
+          "name": "GMX",
+          "address": "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a",
+          "decimals": 18
+        },
+        "quoteToken": {
+          "name": "USDC",
+          "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+          "decimals": 6
+        }
+      },
+      {
+        "name": "WBTC-USDC",
+        "address": "0x5f6aB9b043C43FaB8D2A51EA85b70495B5EeFD15",
+        "positionManagerV2": "0xB7C602973c61eD1Fdb6F759559b217Af42066902",
+        "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=BTCUSDT&interval=",
+        "tvSymbol" : "BYBIT:BTCUSDT",
+        "baseToken": {
+          "name": "WBTC",
+          "address": "0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f",
+          "decimals": 8
+        },
+        "quoteToken": {
+          "name": "USDC",
+          "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
           "decimals": 6
         }
       }
