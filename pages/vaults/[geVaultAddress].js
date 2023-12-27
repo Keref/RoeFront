@@ -1,5 +1,5 @@
+import { useState, useEffect } from "react"
 import { useRouter } from "next/router";
-import { useWeb3React } from "@web3-react/core";
 import { ThunderboltOutlined, WarningOutlined } from "@ant-design/icons";
 import { Card, Typography, Row, Col } from "antd";
 import Slider from "../../components/design/slider";
@@ -9,10 +9,11 @@ import GeVaultForm from "../../components/goodvaults/geVaultForm";
 import useVaultV2 from "../../hooks/useVaultV2";
 import useAddresses from "../../hooks/useAddresses";
 import useAssetData from "../../hooks/useAssetData";
-
+import GEPM_ABI from "../../contracts/GoodEntryPositionManager.json";
+import { ethers } from "ethers";
 
 const GeVaults = ({}) => {
-  const { account } = useWeb3React();
+  const [stats, setStats] = useState({})
   const router = useRouter()
   let { geVaultAddress } = router.query
 
@@ -26,6 +27,30 @@ const GeVaults = ({}) => {
     }
   }
   const vaultDetails = useVaultV2(vault);
+  const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
+  let pmContract = new ethers.Contract(vault.positionManagerV2, GEPM_ABI, customProvider);
+  
+  
+  useEffect(()=>{
+    const getData = async() => {
+      try {
+        let callUtilizationRate = await pmContract.getUtilizationRate(true, 0)
+        let putUtilizationRate = await pmContract.getUtilizationRate(false, 0)
+
+        let stat = {
+          totalSupply: nftSupply.toNumber(), 
+          name: vault.name,          
+          callUtilizationRate: callUtilizationRate.toNumber(),
+          putUtilizationRate: putUtilizationRate.toNumber(),
+        }
+
+        setStats(stat)
+      }
+      catch(e){}
+    }
+    if(pmContract) getData()
+  }, [pmContract])
+  
 
 
   const RewardsTag = () => {
@@ -97,6 +122,14 @@ const GeVaults = ({}) => {
         <Typography.Text>There are 2 main ways that this vault earns yield. Firstly, supply apy by providing liquidity for traders to take on leveraged protected perp position(s). Secondly, amm swap fees as the liquidity is deposited into tight ranges in Uniswap. The vault reinvests the yield earned back into the strategy, effectively compounding the yields for users over time.  Users can deposit and withdraw from the ezVault at any point in time..
         </Typography.Text>
         
+        {/*<Typography.Title level={2}>Vault Stats</Typography.Title>
+        <Typography.Text>
+            <strong>Vault {stats.name}</strong><br/>
+            Positions: {stats.totalSupply} NFTs<br/>
+            Call u.rate: {stats.callUtilizationRate}%<br/>
+            Put u.rate: {stats.putUtilizationRate}%<br/>
+        </Typography.Text>
+        */}
         <Typography.Title level={2}>Performance</Typography.Title>
         <Card style={{ marginTop: 24, height: 300 }}>
           <StatsChart vault={vault} gevault={vaultDetails} />
