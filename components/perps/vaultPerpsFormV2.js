@@ -72,7 +72,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
         // position size in quote tokens on UX, but the contract needs size in base token for longs, and quote tokens for shorts
         let notionalAmount = 
           isCall ? 
-            ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
+            ethers.utils.parseUnits((positionSize / price).toFixed(vault.baseToken.decimals), vault.baseToken.decimals) 
             : ethers.utils.parseUnits( parseFloat(positionSize).toString(), vault.quoteToken.decimals);
         // the price is per unit, not for the whole notionalAmount. used to estimate utilizationRate accurately (higher utilization rate will push option price up)
 
@@ -100,7 +100,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
       // position size in quote tokens on UX, but the contract needs size in base token for longs, and quote tokens for shorts
       let notionalAmount = 
         isCall ? 
-          ethers.utils.parseUnits((positionSize / price).toString(), vault.baseToken.decimals) 
+          ethers.utils.parseUnits((positionSize / price).toFixed(vault.baseToken.decimals), vault.baseToken.decimals) 
           : ethers.utils.parseUnits(positionSize.toString(), vault.quoteToken.decimals);
 
       let collateralAmountAdj = ethers.utils.parseUnits(parseFloat(collateralAmount).toString(), vault.quoteToken.decimals);
