@@ -45,8 +45,8 @@ const downloadImage = (blob, fileName) => {
         <img src="/Good Entry Logo.svg" height={28} alt="Good PnL!" />
         <div style={{ marginTop: 24, display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
           <span style={{ fontSize: 'x-large', fontWeight: 600 }}>{token0.name}-USDC</span>
-          <div style={{ backgroundColor: direction == "short" > 0 ? "#55d17c" : "#e57673", color: 'white', borderRadius: 4, padding: 2, fontSize: 'x-small' }}>
-            {direction.toUpperCase()} 10x
+          <div style={{ backgroundColor: direction == "SHORT" > 0 ? "#55d17c" : "#e57673", color: 'white', borderRadius: 4, padding: 2, fontSize: 'x-small' }}>
+            {direction.toUpperCase()}
           </div>
           
         </div>
