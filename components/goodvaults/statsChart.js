@@ -22,7 +22,7 @@ Chart.register(
   Legend,
 );
 
-const StatsChart = ({vault, gevault}) => {
+const StatsChart = ({vault, vaultDetails}) => {
   const [geData, setGeData] = useState([])
 
   useEffect(() => {
@@ -30,17 +30,17 @@ const StatsChart = ({vault, gevault}) => {
       try {
         const histData = await axios.get("https://roe.nicodeva.xyz/stats/arbitrum/history.json");
         console.log(histData)
-        if (histData.data && histData.data[gevault.address]){
-          console.log(histData.data[gevault.address])
-          setGeData(histData.data[gevault.address])
+        if (histData.data && histData.data[vaultDetails.address]){
+          console.log(histData.data[vaultDetails.address])
+          setGeData(histData.data[vaultDetails.address])
         }
       } catch(e){
         console.log("Fetch historical data", e)
       }
     }
-    if (gevault && gevault.address) getData()
-  }, [gevault.address])
-  
+    if (vaultDetails && vaultDetails.address) getData()
+  }, [vaultDetails.address])
+
   const options = {
       maintainAspectRatio: false,
       indexAxis: 'x',

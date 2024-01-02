@@ -4,7 +4,6 @@ import useAddresses from "./useAddresses";
 import useTokenBalance from "./useTokenBalance";
 import useTokenContract from "./useTokenContract";
 import useOraclePrice from "./useOraclePrice";
-import useGoodStats from "./useGoodStats";
 import { ethers } from "ethers";
 
 /// Get an array with all data related to a symbol, eg USDC or ETH, including user balances and pool balance
@@ -46,16 +45,15 @@ export default function useAssetData(address, vaultAddress) {
   }
   if (asset.name && asset.type != "ticker" && asset.type != "geVault")
     asset.icon = "/icons/" + asset.name.toLowerCase() + ".svg";
-  const goodStats = useGoodStats();
-  const feeApr = goodStats && goodStats["7d"][address] ? parseFloat(goodStats["7d"][address].feesAPR) : 0;
+
   const assetContract = useTokenContract(address);
   const roeToken = useTokenContract(asset.roeAddress);
   
   asset = {
     supplyApr: supplyRate,
-    feeApr: feeApr || 0,
+    feeApr: 0,
     debtApr: parseFloat(variableRate || 0),
-    totalApr: parseFloat(supplyRate) + parseFloat(feeApr),
+    totalApr: parseFloat(supplyRate),
     wallet: 0,
     deposited: 0,
     debt: debt,

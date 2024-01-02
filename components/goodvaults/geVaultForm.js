@@ -20,8 +20,9 @@ const GeVaultForm = ({vault, vaultDetails}) => {
     useTxNotification();
 
   useEffect(() => {
+    console.log(vault.address)
     setToken(vault.baseToken.name);
-  }, [vault]);
+  }, [vault.address]);
 
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   

@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { ThunderboltOutlined, WarningOutlined } from "@ant-design/icons";
 import { Card, Typography, Row, Col } from "antd";
 import Slider from "../../components/design/slider";
-import TickChart from "../../components/goodvaults/tickChart";
 import StatsChart from "../../components/goodvaults/statsChart";
 import GeVaultForm from "../../components/goodvaults/geVaultForm";
 import useVaultV2 from "../../hooks/useVaultV2";
@@ -38,7 +37,6 @@ const GeVaults = ({}) => {
         let putUtilizationRate = await pmContract.getUtilizationRate(false, 0)
 
         let stat = {
-          totalSupply: nftSupply.toNumber(), 
           name: vault.name,          
           callUtilizationRate: callUtilizationRate.toNumber(),
           putUtilizationRate: putUtilizationRate.toNumber(),
@@ -46,7 +44,7 @@ const GeVaults = ({}) => {
 
         setStats(stat)
       }
-      catch(e){}
+      catch(e){console.log('get info', e)}
     }
     if(pmContract) getData()
   }, [pmContract])
@@ -132,7 +130,7 @@ const GeVaults = ({}) => {
         */}
         <Typography.Title level={2}>Performance</Typography.Title>
         <Card style={{ marginTop: 24, height: 300 }}>
-          <StatsChart vault={vault} gevault={vaultDetails} />
+          <StatsChart vault={vault} vaultDetails={vaultDetails} />
         </Card>
         
         <Typography.Title level={2}>Fee Structure</Typography.Title>

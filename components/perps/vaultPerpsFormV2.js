@@ -3,7 +3,6 @@ import { Button, Input, Spin, Slider, Card, Modal, Popover } from "antd";
 import { RiseOutlined, FallOutlined, QuestionCircleOutlined} from "@ant-design/icons";
 
 import GEPM_ABI from "../../contracts/GoodEntryPositionManager.json";
-import GEV_ABI from "../../contracts/GoodEntryVault.json";
 import ERC20_ABI from "../../contracts/ERC20.json";
 import StrikeManager_ABI from "../../contracts/StrikeManager.json";
 import useContract from "../../hooks/useContract";
@@ -33,7 +32,6 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   
   const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
   const pmContract = useContract(vault.positionManagerV2, GEPM_ABI);
-  const vaultContract = useContract(vault.vaultV2, GEV_ABI);
   const quoteContract = useContract(vault.quoteToken.address, ERC20_ABI)
   const strikeContract = new ethers.Contract(strikeManagerAddress, StrikeManager_ABI, customProvider);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
