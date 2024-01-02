@@ -38,11 +38,17 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   const strikeContract = new ethers.Contract(strikeManagerAddress, StrikeManager_ABI, customProvider);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
-  const [leverage, setLeverage] = useState(6)
+  const [leverage, setLeverage] = useState(50)
+  const [sliderLevel, setSliderLevel] = useState(6)
   const leverageGrid = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
   
-  const positionSize = collateralAmount * leverageGrid[leverage-1];
+  const positionSize = collateralAmount * leverage;
   
+  // if leverage is set with the slider, chanbge the multiplier according to slider grid
+  const setLeverageSlider = (lev) => {
+    setLeverage(leverageGrid[lev-1])
+    setSliderLevel(lev)
+  }
   
   // Get user's USDC balance
   useEffect(() => {
@@ -212,13 +218,17 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
           />
           <div>
             <span style={{ fontWeight: "bold", }}>Payout Multiplier</span><br/>
-          { leverage == 10 ? <img src="/images/sweatpepe.png"  style={{ float: 'right', height: 64, width: 64}} /> : <></>}
+          { leverage >= 500 ? <img src="/images/sweatpepe.png"  style={{ float: 'right', height: 64, width: 64}} /> : <></>}
             <div  style={{display: 'flex', flexDirection: 'row', gap: 36}}>
               {/*Leverage: {parseFloat(collateralAmount) > 0 ? (positionSize / collateralAmount).toFixed(0)+"x" : <>&infin;</>}{" "}*/}
-              <Input style={{marginTop: 8, width: 96}} value={leverageGrid[leverage-1]} suffix="X" />
+              <Input 
+                style={{marginTop: 8, width: 96}} 
+                value={leverage} suffix="X" 
+                onChange={(e) => setLeverage(e.target.value)}
+              />
               
               <div style={{ fontSize: 'smaller'}}>
-                <span style={{color: 'grey'}}>Bust Time </span>
+                <span style={{color: 'grey'}}>Runway</span>
                 <Popover
                   placement="top"
                   title="Leverage"
@@ -246,9 +256,9 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
             <Slider
               min={1}
               max={10}
-              onChange={(val)=> setLeverage(val)}
+              onChange={(val)=> setLeverageSlider(val)}
               tooltip={{ open: false}}
-              value={typeof leverage === 'number' ? leverage : 4}
+              value={sliderLevel}
             />
           </div>
         </div>
