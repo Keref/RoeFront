@@ -5,6 +5,7 @@ import { Card, Typography, Row, Col } from "antd";
 import Slider from "../../components/design/slider";
 import StatsChart from "../../components/goodvaults/statsChart";
 import GeVaultForm from "../../components/goodvaults/geVaultForm";
+import MigrationBox from "../../components/goodvaults/migrationBox";
 import useVaultV2 from "../../hooks/useVaultV2";
 import useAddresses from "../../hooks/useAddresses";
 import useAssetData from "../../hooks/useAssetData";
@@ -151,6 +152,36 @@ const GeVaults = ({}) => {
         md={9}
         xs={24}
       >
+        { /* From v1 ETH-USDC.e to GEv2 */
+          vault.address == "0x36003A975bFC56f650590C26B1479ba423217931" 
+            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x0d3cAA624E3a0076A6bc96Ba8D632D37F460Bc74" targetGeVault={vault} /> 
+            : <></>
+        }
+        { /* From alpha ETH-USDC.e to GEv2 */
+          vault.address == "0x36003A975bFC56f650590C26B1479ba423217931" 
+            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x59fA26382De900F29B581553F31C6Da103884ffA" targetGeVault={vault} /> 
+            : <></>
+        }
+        { /* From GEv1-v2 ETH-USDC.e to GEv2 */
+          vault.address == "0x36003A975bFC56f650590C26B1479ba423217931" 
+            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x41D0ebB0F0Bcf7A06E395D0551Cc695e4318594d" targetGeVault={vault} /> 
+            : <></>
+        }
+        { /* From alpha ARB-USDC.e to v2 */
+          vault.address == "0xd5fE1A54fA642400ef559d866247cCE66049141B" 
+            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x31C3871B369bE1B2C3A26f963bcc407ee208099E" targetGeVault={vault} /> 
+            : <></>
+        }
+        { /* From v1 ARB-USDC.e to v2 */
+          vault.address == "0xd5fE1A54fA642400ef559d866247cCE66049141B" 
+            ? <MigrationBox vault={vault} sourceGeVaultAddress="0x14475be7D59895739207a9E5518903f4B94345B7" targetGeVault={vault} /> 
+            : <></>
+        }
+        { /* From v1-2 ARB-USDC.e to v2 */
+          vault.address == "0xd5fE1A54fA642400ef559d866247cCE66049141B" 
+            ? <MigrationBox vault={vault} sourceGeVaultAddress="0xbB59f5324FeA11E538fC7f46C3C7bFE5Ad36e8b9" targetGeVault={vault} /> 
+            : <></>
+        }
         <GeVaultForm vault={vault} vaultDetails={vaultDetails} />
       </Col>
     </Row>

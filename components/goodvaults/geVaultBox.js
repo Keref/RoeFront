@@ -25,7 +25,9 @@ const GeVaultBox = ({vault}) => {
 
   
   const filled = Math.round(100 * vaultDetails.tvl / vaultDetails.maxTvl);
-
+  let totalApr = parseFloat(vaultDetails.feeApr)
+  let incentiveApr = 0
+  //if (vault.address)
   
   return (
     <Col
@@ -79,7 +81,7 @@ const GeVaultBox = ({vault}) => {
                 title="Projected Fees"
                 content={
                   <div style={{ width: 250 }}>
-                    Projected fees APR excluding payouts, based on past 2 days perceived GoodEntry premiums + underlying AMM fees.
+                    Past few days fees APR <span style={{ float: 'right'}}>{(parseFloat(vaultDetails.feeApr)).toFixed(2)}%</span>
                   </div>
                 }
               >
