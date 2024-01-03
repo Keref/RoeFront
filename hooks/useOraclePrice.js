@@ -17,7 +17,7 @@ export default function useOraclePrice(vault) {
         const basePrice = await vaultContract.getBasePrice();
         setPrice(basePrice / 1e8);
       }
-      catch(e) {console.log("Error fetching Uniswap price", e)}
+      catch(e) {console.log("Error fetching baseprice", e)}
     };
 
     if (vault.address && vaultContract) getPrice();
