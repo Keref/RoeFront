@@ -20,14 +20,12 @@ const GeVaultBox = ({vault}) => {
     if (value < 1e9) return (value / 1000).toFixed(0) + "M";
   };
   
-  if (!vault || !vault.address ) return <></>  
-  
-
+  if (!vault || !vault.address ) return <></> 
   
   const filled = Math.round(100 * vaultDetails.tvl / vaultDetails.maxTvl);
   let totalApr = parseFloat(vaultDetails.feeApr)
   let incentiveApr = 0
-  //if (vault.address)
+
   
   return (
     <Col
@@ -81,7 +79,7 @@ const GeVaultBox = ({vault}) => {
                 title="Projected Fees"
                 content={
                   <div style={{ width: 250 }}>
-                    Past few days fees APR <span style={{ float: 'right'}}>{(parseFloat(vaultDetails.feeApr)).toFixed(2)}%</span>
+                    Recent fees APR <span style={{ float: 'right'}}>{(parseFloat(vaultDetails.feeApr)).toFixed(2)}%</span>
                   </div>
                 }
               >

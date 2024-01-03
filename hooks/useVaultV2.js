@@ -46,19 +46,7 @@ export default function useVaultV2(vault) {
     const getData = async () => {
       const customProvider = new ethers.providers.JsonRpcProvider("https://arb1.arbitrum.io/rpc");
       const vaultV2Contract = new ethers.Contract(address, VAULTV2_ABI, customProvider);
-      
-      if (account){
-        try {
-          console.log(address, account)
-          let userBal = await vaultV2Contract.balanceOf(account)
-          console.log('----wta', address, account, userBal.toString())
-          setUserBalance(ethers.utils.formatUnits(userBal, 18) || 0);
-          setUserValue(totalSupply == 0 ? 0 : tvl * userBal / totalSupply / 1e8);
-        }
-        catch(e){
-          console.log("useVaultV2", address, e)
-        }
-      }
+
       
       try {
         const statsUrl = "https://roe.nicodeva.xyz/stats/arbitrum/vaultStats/"+address+".json"
@@ -83,7 +71,18 @@ export default function useVaultV2(vault) {
         let f0 = await vaultV2Contract.getAdjustedBaseFee(true);
         setFee0(f0/100);
         let f1 = await vaultV2Contract.getAdjustedBaseFee(false);
-        setFee1(f1/100);
+        setFee1(f1/100);     
+        
+        if (account){
+          try {
+            let userBal = await vaultV2Contract.balanceOf(account)
+            setUserBalance(ethers.utils.formatUnits(userBal, 18) || 0);
+            setUserValue(totalSupply == 0 ? 0 : tvl * userBal / totalSupply / 1e8);
+          }
+          catch(e){
+            console.log("useVaultV2", address, e)
+          }
+        }
       }
       catch(e){
         console.log("useVaultV2", address, e)
