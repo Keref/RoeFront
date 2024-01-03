@@ -47,7 +47,7 @@ const GeVaults = ({}) => {
       catch(e){console.log('get info', e)}
     }
     if(pmContract) getData()
-  }, [pmContract])
+  }, [pmContract.address])
   
 
 

@@ -12,7 +12,7 @@ var statsPeriod = "7d";
 export default function useVaultV2(vault) {
   if (!vault) vault = {name: ""}
 
-  const [reserves, setReserves] = useState({baseAmount: 0, quoteAmount: 0, tvl: 0});
+  const [stats, setStats] = useState({baseAmount: 0, quoteAmount: 0, tvl: 0, history: []});
   const [maxTvl, setMaxTvl] = useState(0);
   const [fee0, setFee0] = useState(0);
   const [fee1, setFee1] = useState(0);
@@ -28,14 +28,15 @@ export default function useVaultV2(vault) {
   var data = {
     address: address,
     name: vault.name,
-    tvl: reserves.tvl / 1e8,
+    tvl: stats.tvl / 1e8,
     maxTvl: maxTvl,
     totalSupply: totalSupply,
     feeApr: feeApr,
+    history: stats.history,
     wallet: userBalance,
     walletValue: userValue,
     contract: vaultV2ContractWithSigner,
-    reserves: reserves,
+    reserves: stats,
     icon: "/icons/" + vault.name.toLowerCase() + ".svg",
   }
   
@@ -53,19 +54,21 @@ export default function useVaultV2(vault) {
         var tvlCap = parseInt(statsVault["tvlCap"])
         
         setTotalSupply(totalSupply);
-        setReserves(statsVault);
+        setStats(statsVault);
         setMaxTvl(tvlCap / 1e8);
         
         let aprPerceived = 0
-        for (let k = 0; k < statsVault.fees.length; k++){
-          let thatDayFees = statsVault.fees[k]
+        for (let k = 0; k < statsVault.history.length; k++){
+          let thatDayFees = statsVault.history[k]
           aprPerceived += parseInt(thatDayFees["feesX8"]) / parseInt(thatDayFees["tvlX8"])
         }
-        setApr(aprPerceived * 36500 / statsVault.fees.length)
-        
-        let userBal = ethers.utils.formatUnits(await vaultV2Contract.balanceOf(account) , 18)
-        setUserBalance(userBal || 0);
-        setUserValue(totalSupply == 0 ? 0 : parseInt(statsVault["tvl"]) * userBal / totalSupply);
+        setApr(aprPerceived * 36500 / statsVault.history.length)
+
+        if (account){
+          let userBal = await vaultV2Contract.balanceOf(account)
+          setUserBalance(ethers.utils.formatUnits(userBal, 18) || 0);
+          setUserValue(totalSupply == 0 ? 0 : tvl * userBal / totalSupply / 1e8);
+        }
       }
       catch(e){
         console.log("useVaultV2", address, e)

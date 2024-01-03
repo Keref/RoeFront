@@ -20,7 +20,6 @@ const GeVaultForm = ({vault, vaultDetails}) => {
     useTxNotification();
 
   useEffect(() => {
-    console.log(vault.address)
     setToken(vault.baseToken.name);
   }, [vault.address]);
 
@@ -115,7 +114,7 @@ const GeVaultForm = ({vault, vaultDetails}) => {
     }
   ]
   
-  
+
   return(<>
   
   <Card style={{marginLeft: 64, color: 'white'}}>
@@ -190,12 +189,6 @@ const GeVaultForm = ({vault, vaultDetails}) => {
       <span>My Share</span>
       <span>{(100*parseFloat(vaultDetails.walletValue)/parseFloat(vaultDetails.tvl)).toFixed(2)}%</span>
     </div>
-  </Card>
-  <Card style={{marginLeft: 64, marginTop: 24, color: 'white'}}>
-    Vault assets:<br/>
-    <span style={{float: 'right'}}>{Math.floor(ethers.utils.formatUnits(vaultDetails.reserves.baseAmount, vault.baseToken.decimals - 4)) / 10000} {vault.baseToken.name}</span>
-    <br/>
-    <span style={{float: 'right'}}>{ethers.utils.formatUnits(vaultDetails.reserves.quoteAmount, vault.quoteToken.decimals - 2)/100} {vault.quoteToken.name}</span>
   </Card>
   </>);
 };

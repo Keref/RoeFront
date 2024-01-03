@@ -23,33 +23,21 @@ Chart.register(
 );
 
 const StatsChart = ({vault, vaultDetails}) => {
-  const [geData, setGeData] = useState([])
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const histData = await axios.get("https://roe.nicodeva.xyz/stats/arbitrum/history.json");
-        console.log(histData)
-        if (histData.data && histData.data[vaultDetails.address]){
-          console.log(histData.data[vaultDetails.address])
-          setGeData(histData.data[vaultDetails.address])
-        }
-      } catch(e){
-        console.log("Fetch historical data", e)
-      }
-    }
-    if (vaultDetails && vaultDetails.address) getData()
-  }, [vaultDetails.address])
-
+  
   const options = {
       maintainAspectRatio: false,
       indexAxis: 'x',
       scales: {
         y: {
-           display: true,
+          display: true,
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
         },
         x: {
-            display: true,
+          display: true,
         }
       },
     plugins: {
@@ -65,25 +53,21 @@ const StatsChart = ({vault, vaultDetails}) => {
   };
   
   const data = {
-    labels: geData.map(item => { return (new Date(item.date*1000)).toLocaleDateString('en-GB').substring(0, 5)}),
+    labels: vaultDetails.history.map(item => { return (new Date(item.day*86400000)).toLocaleDateString('en-GB').substring(0, 5)}),
     datasets: [
       {
-        label: 'Supply APR',
-        data: geData.map(item => item.supplyRate),
+        label: 'Fees APR',
+        data: vaultDetails.history.map(item => {return item.feesX8 / item.tvlX8 * 36500}),
         borderColor: 'rgba(254, 73, 88, 0.7)',
         backgroundColor: 'rgba(255, 99, 132, 0)',
+        yAxisID: 'y',
       },
       {
-        label: 'Fees APR',
-        data: geData.map(item => item.feesRate),
+        label: 'Vault price',
+        data: vaultDetails.history.map(item => {return item.vaultPrice/1e8}),
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      },
-      {
-        label: 'Total APR',
-        data: geData.map(item => {return item.feesRate+item.supplyRate}),
-        borderColor: 'rgba(14, 192, 82)',
-        backgroundColor: 'rgba(14, 192, 82, 0.5)',
+        yAxisID: 'y1',
       },
     ],
   };
