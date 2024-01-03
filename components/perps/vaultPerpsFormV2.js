@@ -101,7 +101,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
       }
     }
     if (price > 0) getData()
-  }, [positionSize, price,  isCall, vault.positionManagerV2, strikeX8, vault.baseToken.decimals, vault.quoteToken.decimals])
+  }, [positionSize, price,  isCall, vault.positionManagerV2, strikeX8.toString(), vault.baseToken.decimals, vault.quoteToken.decimals])
 
 
   const openPosition = async () => {
