@@ -10,7 +10,8 @@ const MigrationBox = ({vault, sourceGeVaultAddress, targetGeVault}) => {
   const { account } = useWeb3React();
   const [sourceVaultBal, setSourceVaultBal] = useState(0);
   const migrationVault = useContract("0xf350e47D1db625DA9cfa3A362A13839A550B15Ab", MigrationVault_ABI);
-  const sourceVault = useVaultV2(vault);
+  const sourceVault = useVaultV2({address: sourceGeVaultAddress, name: "old"});
+  console.log(sourceVault)
   console.log("Source:", sourceVault, "Target:", targetGeVault)
   
   const migrate = async () => {
