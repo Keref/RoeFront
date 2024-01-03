@@ -31,6 +31,8 @@ export default function useVaultV2(vault) {
     tvl: stats.tvl / 1e8,
     maxTvl: maxTvl,
     totalSupply: totalSupply,
+    fee0: fee0,
+    fee1: fee1,
     feeApr: feeApr,
     history: stats.history,
     wallet: userBalance,
@@ -69,6 +71,11 @@ export default function useVaultV2(vault) {
           setUserBalance(ethers.utils.formatUnits(userBal, 18) || 0);
           setUserValue(totalSupply == 0 ? 0 : tvl * userBal / totalSupply / 1e8);
         }
+        
+        let f0 = await vaultV2Contract.getAdjustedBaseFee(true);
+        setFee0(f0/100);
+        let f1 = await vaultV2Contract.getAdjustedBaseFee(false);
+        setFee1(f1/100);
       }
       catch(e){
         console.log("useVaultV2", address, e)
