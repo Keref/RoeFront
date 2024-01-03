@@ -12,7 +12,7 @@ import { useTxNotification } from "../../hooks/useTxNotification";
 import PayoutChart from "./payoutChart";
 
 
-const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
+const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo }) => {
   // Note: all addresses.json will be revamped, esp. can replcae token0/token1 by baseToken/quoteToken so easier to quesry and display
   const { account, library } = useWeb3React();
   const [isSpinning, setSpinning] = useState()
@@ -42,12 +42,18 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   
   const positionSize = collateralAmount * leverage;
   
+  let maxSize = direction == "Long" ?
+    (oiInfo.callMax - oiInfo.callOI) * price / 10**(vault.baseToken.decimals)
+    : (oiInfo.putMax - oiInfo.putOI) / 10**vault.quoteToken.decimals
+  if (maxSize < 0) maxSize = 0
+
+  
   // if leverage is set with the slider, chanbge the multiplier according to slider grid
   const setLeverageSlider = (lev) => {
     setLeverage(leverageGrid[lev-1])
     setSliderLevel(lev)
   }
-  
+
   // Get user's USDC balance
   useEffect(() => {
     const getData = async () => {
@@ -134,13 +140,15 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
   let collateralBelowBalance = parseFloat(quoteBalance) < parseFloat(collateralAmount) + 4;
   let positionBelowMin = minPositionValue > positionSize
   let collateralBelowMin = minCollateralAmount > collateralAmount
-  const isOpenPositionButtonDisabled = parseFloat(positionSize) == 0 || positionBelowMin || collateralBelowMin || collateralBelowBalance;
+  let maxOIreached = positionSize > maxSize
+  const isOpenPositionButtonDisabled = parseFloat(positionSize) == 0 || positionBelowMin || collateralBelowMin || collateralBelowBalance || maxOIreached;
 
   let openPositionButtonErrorTitle = "Open " + direction;
   if (parseFloat(collateralAmount) > 0 && parseFloat(positionSize) > 0){
     if (positionBelowMin) openPositionButtonErrorTitle = "Position size too Low";
     else if (collateralBelowMin) openPositionButtonErrorTitle = "Collateral amount too Low";
     else if (collateralBelowBalance) openPositionButtonErrorTitle = "Not enough funds";
+    else if (maxOIreached) openPositionButtonErrorTitle = "Max OI Reached";
   }
   
   // runway: hourly funding funding * size = hourly cost, runway in hours = collateral amount / hourly cost
@@ -273,7 +281,9 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh }) => {
       </div>
       <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
         <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Size</span>
-        <span style={{ fontSize: "small"}}>$ {positionSize}</span>
+        <span style={{ fontSize: "small", color: maxOIreached ? "#dc4446" : "rgba(138, 144, 152, 0.85)", fontWeight: maxOIreached ? 700 : 400}}>
+          $ {positionSize} (max: ${maxSize.toFixed(0)})
+        </span>
       </div>
       <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between'}}>
         <span style={{color: "#94A3B8", fontSize: "small", fontWeight: 500 }}>Activation Price</span>
