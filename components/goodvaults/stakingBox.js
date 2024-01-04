@@ -67,7 +67,7 @@ const StakingBox = ({vault, vaultDetails}) => {
       showErrorNotification(e.code, e.reason);
     }
   }
-
+  return <></>
 
   if (vault.name == "ARB-USDC") return (
     <Card style={{marginLeft: 64, marginTop: 16}} title="Farming Rewards">

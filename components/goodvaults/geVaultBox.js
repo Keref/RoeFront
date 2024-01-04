@@ -26,9 +26,9 @@ const GeVaultBox = ({vault}) => {
   let totalApr = parseFloat(vaultDetails.feeApr)
   
   let incentiveApr = 0
-  if(vault.rewardTracker) incentiveApr = 70
+  /*if(vault.rewardTracker) incentiveApr = 70
   if(vaultDetails.name == "ARB-USDC") incentiveApr = 150
-
+  */
   const RewardsTag = () => {
     return (<div style={{backgroundColor: "#0A371B", color: "#0FFD6A", borderRadius: 4, padding: "4px 8px", display: 'flex', alignItems: 'center', fontWeight: 500, fontSize: "smaller" }}>
       <img src="/logo.svg" height={18} alt='Good Entry Logo' style={{ marginRight:4 }} />
