@@ -36,8 +36,8 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
   const strikeContract = new ethers.Contract(strikeManagerAddress, StrikeManager_ABI, customProvider);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
-  const [leverage, setLeverage] = useState(50)
-  const [sliderLevel, setSliderLevel] = useState(6)
+  const [leverage, setLeverage] = useState(100)
+  const [sliderLevel, setSliderLevel] = useState(7)
   const leverageGrid = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000];
   
   const positionSize = collateralAmount * leverage;
@@ -95,7 +95,9 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
         );
         //console.log('option price ', optionPriceX8.toString(), price)
         // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
-        setFundingRate(100 * optionPriceX8 / 6 / 1e8 / price);
+        let fRate = 100 * optionPriceX8 / 6 / 1e8 / price
+        if (leverage > 200) fRate = fRate * (100 + 20*(leverage-200)/500) / 100;
+        setFundingRate(fRate);
       } catch(e) {
         console.log('getOptionPrice', e);
       }
