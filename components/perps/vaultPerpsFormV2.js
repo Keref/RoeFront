@@ -96,7 +96,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
         //console.log('option price ', optionPriceX8.toString(), price)
         // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
         let fRate = 100 * optionPriceX8 / 6 / 1e8 / price
-        if (leverage > 200) fRate = fRate * (100 + 20*(leverage-250)/50) / 100;
+        if (leverage > 200) fRate = fRate * (100 + 20*(leverage-250)/25) / 100;
         setFundingRate(fRate);
       } catch(e) {
         console.log('getOptionPrice', e);
