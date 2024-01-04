@@ -3,8 +3,8 @@ import {useEffect, useState} from "react";
 import { Card, Button, Input, Spin, Divider, Dropdown } from "antd";
 import {DownloadOutlined, UploadOutlined, DownOutlined } from "@ant-design/icons"
 import { useWeb3React } from "@web3-react/core";
-import RewardTracker_ABI from "../../contracts/rewardTracker.json";
-import RewardStreamer_ABI from "../../contracts/rewardStreamer.json";
+import RewardTracker_ABI from "../../contracts/RewardTracker.json";
+import RewardStreamer_ABI from "../../contracts/RewardStreamer.json";
 import useContract from "../../hooks/useContract";
 import { useTxNotification } from "../../hooks/useTxNotification";
 
