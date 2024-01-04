@@ -7,9 +7,9 @@ import useTokenContract from "../../hooks/useTokenContract";
 import { useTxNotification } from "../../hooks/useTxNotification";
 import useETHBalance from "../../hooks/useETHBalance";
 import { ethers } from "ethers";
+import StakingBox from "./stakingBox";
 
 
-/// Asserts that ETH is always token0 (as per arbitrum)
 const GeVaultForm = ({vault, vaultDetails}) => {
   const { account, chainId } = useWeb3React();
   const [direction, setDirection] = useState("Deposit");
@@ -190,6 +190,8 @@ const GeVaultForm = ({vault, vaultDetails}) => {
       <span>{(100*parseFloat(vaultDetails.walletValue)/parseFloat(vaultDetails.tvl)).toFixed(2)}%</span>
     </div>
   </Card>
+  
+  <StakingBox vault={vault} vaultDetails={vaultDetails} />
   </>);
 };
 

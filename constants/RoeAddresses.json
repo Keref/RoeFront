@@ -10,6 +10,8 @@
         "name": "ETH-USDC",
         "address": "0xd666156C473Cc9539CAaCc112B3A3590a895C861",
         "positionManagerV2": "0x0f652aAd7993D48bd6E876829aEDC068507a6cE3",
+        "rewardTracker": "0x6FE937844dCFd8A001F163eC490241c6f5202d25",
+        "rewardStreamer": "0x25ACc51a685DF70f6413517a26C3501d600cacDE",
         "ohlcUrl": "https://api.bybit.com/v5/market/index-price-kline?category=linear&symbol=ETHUSDT&interval=",
         "tvSymbol" : "BYBIT:ETHUSDC",
         "baseToken": {

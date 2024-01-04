@@ -1,0 +1,128 @@
+import { ethers } from "ethers";
+import {useEffect, useState} from "react";
+import { Card, Button, Input, Spin, Divider, Dropdown } from "antd";
+import {DownloadOutlined, UploadOutlined, DownOutlined } from "@ant-design/icons"
+import { useWeb3React } from "@web3-react/core";
+import RewardTracker_ABI from "../../contracts/rewardTracker.json";
+import RewardStreamer_ABI from "../../contracts/rewardStreamer.json";
+import useContract from "../../hooks/useContract";
+import { useTxNotification } from "../../hooks/useTxNotification";
+
+
+const StakingBox = ({vault, vaultDetails}) => {
+  const { account } = useWeb3React();
+  const [refresh, setRefresh] = useState(0)
+  const [stakedBal, setStakedBal] = useState(0)
+  const [rewardRate, setRewardRate] = useState(0)
+  const [pendingRewards, setPendingRewards] = useState(0)
+  const [direction, setDirection] = useState("Stake");
+  const [showSuccessNotification, showErrorNotification, contextHolder] =
+    useTxNotification();
+  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  const tracker  = useContract(vault.rewardTracker, RewardTracker_ABI);
+  const streamer = useContract(vault.rewardStreamer, RewardStreamer_ABI);
+    
+  useEffect(() => {
+    const getBalances = async () => {
+      try {
+        const stakedBal_ = await tracker.balanceOf(account)
+        setStakedBal(stakedBal_)
+      } catch(e) { console.log("Get staking bals", e)}
+      
+    }
+    if(vault.rewardTracker && account) getBalances()
+  }, [vault.rewardTracker, account, refresh])
+
+
+  const stake = async () => {
+    try {
+      const walletBalance = ethers.utils.parseUnits("1", 18); // vaultDetails.wallet
+      let result = await vaultDetails.contract.allowance(account, tracker.address);
+      if ( result.lt(walletBalance)) {
+          result = await vaultDetails.contract.approve(tracker.address, ethers.constants.MaxUint256);
+          await delay(5000);
+        }
+
+      result = await tracker["stake(uint256)"](walletBalance);
+      showSuccessNotification("Assets staked", "Assets staked successful", result.hash);
+      await delay(2000);
+      setRefresh(refresh+1)
+    }
+    catch(e){
+      console.log("Error staking", e.message);
+      showErrorNotification(e.code, e.reason);
+    }
+  }
+
+
+  const unstake = async () => {
+    try {
+      let result = await tracker["unstake(uint256)"](stakedBal);
+      showSuccessNotification("Unstaked", "Unstaked successful", result.hash);
+      await delay(2000);
+      setRefresh(refresh+1)
+    }
+    catch(e){
+      console.log("Error staking", e.message);
+      showErrorNotification(e.code, e.reason);
+    }
+  }
+
+
+  
+  if (!vault.rewardTracker) return (<></>)
+
+  return (
+  <Card style={{marginLeft: 64, color: 'white', marginTop: 16}} title="Farming Rewards">
+    ARB rewards
+    <span style={{ float: 'right'}}>
+      <div style={{ flexDirection: 'row', alignItems: 'center', display: 'flex'}}>
+        <img src={"/icons/arb.svg"} height={18} style={{marginRight: 8}} />{rewardRate}/day
+      </div>
+    </span>
+    <br/>
+    Unstaked Balance: <span style={{float: 'right'}}>{vaultDetails.wallet > 0 ? parseFloat(vaultDetails.wallet).toFixed(2) : 0}</span>
+    <br/>
+    Staked Balance: <span style={{float: 'right'}}>{stakedBal > 0 ? (stakedBal.toString() / 1e18).toFixed(2) : 0}</span>
+    <br/>
+    <div style={{marginBottom: 0, marginTop: 24}}>
+      <Button
+        type={direction == "Stake" ? "primary" : "default"}
+        style={{ width: "47%", textAlign: "center", borderRadius: 4 }}
+        onClick={stake}
+      >
+        <strong><DownloadOutlined /> Stake All</strong>
+      </Button>
+      <Button
+        type={direction == "Unstake" ? "primary" : "default"}
+        style={{ width: "47%", textAlign: "center", borderRadius: 4, float: 'right' }}
+        onClick={unstake}
+      >
+        <strong><UploadOutlined /> Unstake All</strong>
+      </Button>      
+    </div>
+    
+    <Divider />
+    Pending Rewards
+    <span style={{ float: 'right'}}>
+      <div style={{ flexDirection: 'row', alignItems: 'center', display: 'flex'}}>
+        {rewardRate}
+        <img src={"/icons/arb.svg"} height={18} style={{marginLeft: 8}} />
+      </div>
+    </span>
+    <br/>
+    <Button
+      type="primary"
+      disabled={pendingRewards==0}
+      style={{ width: "47%", textAlign: "center", borderRadius: 4, marginTop: 8, float: 'right' }}
+      onClick={() => {
+        setDirection("Unstake");
+      }}
+    >
+      <strong><UploadOutlined /> Claim</strong>
+    </Button>  
+  </Card>)
+}
+
+
+export default StakingBox;

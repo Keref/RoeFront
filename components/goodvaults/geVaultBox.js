@@ -24,8 +24,16 @@ const GeVaultBox = ({vault}) => {
   
   const filled = Math.round(100 * vaultDetails.tvl / vaultDetails.maxTvl);
   let totalApr = parseFloat(vaultDetails.feeApr)
+  
   let incentiveApr = 0
+  if(vault.rewardTracker) incentiveApr = 70
+  if(vaultDetails.name == "ARB-USDC") incentiveApr = 150
 
+  const RewardsTag = () => {
+    return (<div style={{backgroundColor: "#0A371B", color: "#0FFD6A", borderRadius: 4, padding: "4px 8px", display: 'flex', alignItems: 'center', fontWeight: 500, fontSize: "smaller" }}>
+      <img src="/logo.svg" height={18} alt='Good Entry Logo' style={{ marginRight:4 }} />
+    </div>)
+  }  
   
   return (
     <Col
@@ -52,11 +60,9 @@ const GeVaultBox = ({vault}) => {
           justifyContent: "space-between", height: '100%', gap: 12, 
         }}
       >
-        <span
-          style={{ fontSize: "x-large", marginLeft: 8 }}
-        >
-          {vaultDetails.name == "WETH-USDC" ? "ETH-USDC" : vaultDetails.name}
-        </span>
+        <div style={{ fontSize: "x-large", marginLeft: 8, display: "flex", flexDirection: "row", gap: 16, alignItems: 'center' }}>
+          {vaultDetails.name} {incentiveApr > 0 ? <RewardsTag/> : <></>}
+        </div>
         <img src={vaultDetails.icon} alt={vault.name.toLowerCase()} height={164} />
         
         <div
@@ -80,6 +86,13 @@ const GeVaultBox = ({vault}) => {
                 content={
                   <div style={{ width: 250 }}>
                     Recent fees APR <span style={{ float: 'right'}}>{(parseFloat(vaultDetails.feeApr)).toFixed(2)}%</span>
+                      { incentiveApr > 0 ?
+                        <>
+                          <br/>
+                          ARB incentives<span style={{ float: 'right'}}>{(parseFloat(incentiveApr)).toFixed(2)}%</span>
+                        </>
+                        : <></>
+                      }
                   </div>
                 }
               >
@@ -87,7 +100,7 @@ const GeVaultBox = ({vault}) => {
                 </Popover>
             </span>
             <span style={{ fontSize: "large", fontWeight: 600 }}>
-              {(parseFloat(vaultDetails.feeApr)).toFixed(2)} %
+              {(parseFloat(vaultDetails.feeApr + incentiveApr)).toFixed(2)} %
             </span>
         </div>
         <div
