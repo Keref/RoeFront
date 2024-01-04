@@ -69,7 +69,18 @@ const StakingBox = ({vault, vaultDetails}) => {
   }
 
 
-  
+  if (vault.name == "ARB-USDC") return (
+    <Card style={{marginLeft: 64, marginTop: 16}} title="Farming Rewards">
+      The ARB-USDC vault receive rewards daily that are directly deposited in the vault.
+      <br/>
+      <br/>
+      ARB rewards
+      <span style={{ float: 'right'}}>
+        <div style={{ flexDirection: 'row', alignItems: 'center', display: 'flex'}}>
+          <img src={"/icons/arb.svg"} height={18} style={{marginRight: 8}} />{rewardRate}/day
+        </div>
+      </span>
+    </Card>)
   if (!vault.rewardTracker) return (<></>)
 
   return (
