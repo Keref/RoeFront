@@ -68,8 +68,8 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
     const getData = async () => {
       let valStrike = 
         direction == "Long" ? 
-          await strikeContract.getStrikeAbove(parseInt(price * 1e8))
-          : await strikeContract.getStrikeBelow(parseInt(price * 1e8))
+          await strikeContract.getStrikeStrictlyAbove(await strikeContract.getStrikeAbove(parseInt(price * 1e8)))
+          : await strikeContract.getStrikeStrictlyBelow(await strikeContract.getStrikeBelow(parseInt(price * 1e8)))
       setStrike(valStrike);
     }  
     if (price > 0 && strikeContract) getData();
