@@ -9,7 +9,7 @@ const HistoryTx = ({tx}) => {
   const [position, setPosition] = useState({})
 
   let addresses = useAddresses()
-  let vault = {}
+  let vault = { baseToken: {}, quoteToken: {} }
   
   for (let v of addresses.lendingPools){
     if (v.positionManagerV2.toLowerCase() == tx.address.toLowerCase()) vault = v

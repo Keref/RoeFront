@@ -49,7 +49,7 @@ export default function useVaultV2(vault) {
 
       
       try {
-        const statsUrl = "https://roe.nicodeva.xyz/stats/arbitrum/vaultStats/"+address+".json"
+        const statsUrl = "https://api.goodentry.io/arbitrum/vaultStats/"+address+".json"
         var statsVault = (await axios.get(statsUrl)).data
         
         var totalSupply = parseInt(statsVault["totalSupply"])
