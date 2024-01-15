@@ -28,6 +28,7 @@ const GeVaultForm = ({vault, vaultDetails}) => {
   const ethBalance = useETHBalance(account).data / 1e18;
   const assetData = useAssetData(token == vault.baseToken.name ? vault.baseToken.address : vault.quoteToken.address, vault.address);
   const tokenContract = useTokenContract(assetData.address);
+  const myShare = (100*parseFloat(vaultDetails.walletValue)/parseFloat(vaultDetails.tvl)).toFixed(2)
 
   // if deposit baseToken or withdraw baseToken, fee is fee0
   var operationFee = vaultDetails.fee1;
@@ -187,7 +188,7 @@ const GeVaultForm = ({vault, vaultDetails}) => {
     </div>
     <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <span>My Share</span>
-      <span>{(100*parseFloat(vaultDetails.walletValue)/parseFloat(vaultDetails.tvl)).toFixed(2)}%</span>
+      <span>{myShare}%</span>
     </div>
   </Card>
   

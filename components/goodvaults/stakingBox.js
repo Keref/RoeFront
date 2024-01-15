@@ -13,7 +13,7 @@ const StakingBox = ({vault, vaultDetails}) => {
   const { account } = useWeb3React();
   const [refresh, setRefresh] = useState(0)
   const [stakedBal, setStakedBal] = useState(0)
-  const [rewardRate, setRewardRate] = useState(0)
+  const [rewardRate, setRewardRate] = useState(400)
   const [pendingRewards, setPendingRewards] = useState(0)
   const [direction, setDirection] = useState("Stake");
   const [showSuccessNotification, showErrorNotification, contextHolder] =
@@ -22,11 +22,15 @@ const StakingBox = ({vault, vaultDetails}) => {
   const tracker  = useContract(vault.rewardTracker, RewardTracker_ABI);
   const streamer = useContract(vault.rewardStreamer, RewardStreamer_ABI);
     
+    
+    
   useEffect(() => {
     const getBalances = async () => {
       try {
         const stakedBal_ = await tracker.balanceOf(account)
+        const pending_ = await tracker.claimableRewardsOf(account)
         setStakedBal(stakedBal_)
+        setPendingRewards(pending_.toString() / 1e18)
       } catch(e) { console.log("Get staking bals", e)}
       
     }
@@ -34,9 +38,10 @@ const StakingBox = ({vault, vaultDetails}) => {
   }, [vault.rewardTracker, account, refresh])
 
 
+
   const stake = async () => {
     try {
-      const walletBalance = ethers.utils.parseUnits("1", 18); // vaultDetails.wallet
+      const walletBalance = ethers.utils.parseUnits(vaultDetails.wallet, 18); // vaultDetails.wallet
       let result = await vaultDetails.contract.allowance(account, tracker.address);
       if ( result.lt(walletBalance)) {
           result = await vaultDetails.contract.approve(tracker.address, ethers.constants.MaxUint256);
@@ -55,6 +60,7 @@ const StakingBox = ({vault, vaultDetails}) => {
   }
 
 
+
   const unstake = async () => {
     try {
       let result = await tracker["unstake(uint256)"](stakedBal);
@@ -67,14 +73,30 @@ const StakingBox = ({vault, vaultDetails}) => {
       showErrorNotification(e.code, e.reason);
     }
   }
-  return <></>
+
+
+
+  const claim = async () => {
+    try {
+      let result = await tracker.claim();
+      showSuccessNotification("Claimed", "Claimed successfully", result.hash);
+      await delay(2000);
+      setRefresh(refresh+1)
+    }
+    catch(e){
+      console.log("Error staking", e.message);
+      showErrorNotification(e.code, e.reason);
+    }
+  }
+
+
 
   if (vault.name == "ARB-USDC") return (
     <Card style={{marginLeft: 64, marginTop: 16}} title="Farming Rewards">
       The ARB-USDC vault receive rewards daily that are directly deposited in the vault.
       <br/>
       <br/>
-      ARB rewards
+      Total ARB rewards
       <span style={{ float: 'right'}}>
         <div style={{ flexDirection: 'row', alignItems: 'center', display: 'flex'}}>
           <img src={"/icons/arb.svg"} height={18} style={{marginRight: 8}} />{rewardRate}/day
@@ -101,6 +123,7 @@ const StakingBox = ({vault, vaultDetails}) => {
         type={direction == "Stake" ? "primary" : "default"}
         style={{ width: "47%", textAlign: "center", borderRadius: 4 }}
         onClick={stake}
+        disabled={vaultDetails.wallet == 0}
       >
         <strong><DownloadOutlined /> Stake All</strong>
       </Button>
@@ -117,7 +140,7 @@ const StakingBox = ({vault, vaultDetails}) => {
     Pending Rewards
     <span style={{ float: 'right'}}>
       <div style={{ flexDirection: 'row', alignItems: 'center', display: 'flex'}}>
-        {rewardRate}
+        {pendingRewards}
         <img src={"/icons/arb.svg"} height={18} style={{marginLeft: 8}} />
       </div>
     </span>
@@ -126,9 +149,7 @@ const StakingBox = ({vault, vaultDetails}) => {
       type="primary"
       disabled={pendingRewards==0}
       style={{ width: "47%", textAlign: "center", borderRadius: 4, marginTop: 8, float: 'right' }}
-      onClick={() => {
-        setDirection("Unstake");
-      }}
+      onClick={claim}
     >
       <strong><UploadOutlined /> Claim</strong>
     </Button>  

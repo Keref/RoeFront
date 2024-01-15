@@ -118,7 +118,7 @@ const GeVaults = ({}) => {
         <Typography.Title level={2}>
           EzVault Strategy
         </Typography.Title>
-        <Typography.Text>There are 2 main ways that this vault earns yield. Firstly, supply apy by providing liquidity for traders to take on leveraged protected perp position(s). Secondly, amm swap fees as the liquidity is deposited into an underlying AMM. The vault reinvests the yield earned back into the strategy, effectively compounding the yields for users over time.  Users can deposit and withdraw from the ezVault at any point in time..
+        <Typography.Text>There are 2 main ways that this vault earns yield. Firstly, supply apy by providing liquidity for traders to take on leveraged protected perp position(s). Secondly, amm swap fees as the liquidity is deposited into an underlying AMM. The vault reinvests the yield earned back into the strategy, effectively compounding the yields for users over time.  Users can deposit and withdraw from the ezVault at any point in time.
         </Typography.Text>
         
         {/*<Typography.Title level={2}>Vault Stats</Typography.Title>
@@ -133,7 +133,9 @@ const GeVaults = ({}) => {
         <Card style={{ marginTop: 24, height: 300 }}>
           <StatsChart vault={vault} vaultDetails={vaultDetails} />
         </Card>
-        
+        <Typography.Text>
+          Projected APR is based on past 30 days average.
+        </Typography.Text>
         <Typography.Title level={2}>Fee Structure</Typography.Title>
         <Typography.Text>
           There is a one-time deposit and withdraw fee. The base fee is 0.2%.
