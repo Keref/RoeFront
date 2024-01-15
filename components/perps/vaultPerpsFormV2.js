@@ -63,6 +63,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
     if (account && quoteContract) getData();
   }, [account, quoteContract])
 
+
   // Get closest strike based on current pair price
   useEffect(() => {
     const getData = async () => {
@@ -74,6 +75,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
     }  
     if (price > 0 && strikeContract) getData();
   }, [price, strikeContract, direction])
+  
   
   // Compute funding rate based on current input parameters
   useEffect(() => {
@@ -96,16 +98,17 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
         //console.log('option price ', optionPriceX8.toString(), price)
         // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
         let fRate = 100 * optionPriceX8 / 6 / 1e8 / price
-        if (leverage > 200) fRate = fRate * (100 + 20*(leverage-250)/25) / 100;
+        if (leverage > 250) fRate = fRate * (100 + 20*(leverage-250)/25) / 100;
         setFundingRate(fRate);
       } catch(e) {
         console.log('getOptionPrice', e);
       }
     }
     if (price > 0) getData()
-  }, [positionSize, price,  isCall, vault.positionManagerV2, strikeX8.toString(), vault.baseToken.decimals, vault.quoteToken.decimals])
+  }, [positionSize, price,  isCall, vault.positionManagerV2, strikeX8.toString(), vault.baseToken.decimals, vault.quoteToken.decimals, leverage])
 
 
+  // Open position
   const openPosition = async () => {
     setSpinning(true)
     try {
@@ -138,6 +141,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
     }
     setSpinning(false);
   };
+
 
   let collateralBelowBalance = parseFloat(quoteBalance) < parseFloat(collateralAmount) + 4;
   let positionBelowMin = minPositionValue > positionSize
