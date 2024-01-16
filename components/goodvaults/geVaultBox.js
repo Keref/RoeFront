@@ -123,7 +123,7 @@ const GeVaultBox = ({vault}) => {
               ${toReadable(vaultDetails.tvl)}
             </span>
         </div>
-        <Slider value={filled} disabled={true} style={{marginTop: -12, marginBottom: -8}} />
+        {/*<Slider value={filled} disabled={true} style={{marginTop: -12, marginBottom: -8}} />
         <div
           style={{
             width: "100%",
@@ -142,7 +142,7 @@ const GeVaultBox = ({vault}) => {
             <span style={{ fontSize: "large", fontWeight: 600 }}>
               ${toReadable(vaultDetails.maxTvl)}
             </span>
-        </div>
+        </div>*/}
         <Divider style={{margin: "12px 0"}} />
         <div
           style={{
