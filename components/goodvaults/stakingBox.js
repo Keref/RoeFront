@@ -147,7 +147,6 @@ const StakingBox = ({vault, vaultDetails}) => {
     <br/>
     <Button
       type="primary"
-      disabled={pendingRewards==0}
       style={{ width: "47%", textAlign: "center", borderRadius: 4, marginTop: 8, float: 'right' }}
       onClick={claim}
     >
