@@ -28,9 +28,9 @@ const StakingBox = ({vault, vaultDetails}) => {
     const getBalances = async () => {
       try {
         const stakedBal_ = await tracker.balanceOf(account)
-        const pending_ = await tracker.claimableRewardsOf(account)
+        const pending_ = await tracker.callStatic.claim()
         setStakedBal(stakedBal_)
-        setPendingRewards(pending_.toString() / 1e18)
+        setPendingRewards((pending_.toString() / 1e18).toFixed(3))
       } catch(e) { console.log("Get staking bals", e)}
       
     }
@@ -88,6 +88,9 @@ const StakingBox = ({vault, vaultDetails}) => {
       showErrorNotification(e.code, e.reason);
     }
   }
+  
+  
+  
 
 
 
