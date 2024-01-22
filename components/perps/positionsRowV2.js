@@ -38,8 +38,9 @@ const PositionsRowV2 = ({ position, vault, price, setRefresh }) => {
 
   let pnlPercent = pnl / (position.collateralAmount - 4e6) * 1e8;
   let notionalUsd = position.isCall ? 
-    ethers.utils.formatUnits(position.notionalAmount.mul(position.strike).div(1e8))
+    ethers.utils.formatUnits(position.notionalAmount.mul(position.strike).div(1e8), vault.baseToken.decimals)
     : ethers.utils.formatUnits(position.notionalAmount, vault.quoteToken.decimals);
+
   // divide by 1e10 for scaling and 1e6 for usdc decimals * 100 for percent
   let fundingRate = parseFloat(position.data.mul(3600).toString()) / notionalUsd / 1e14
   let initialCollateral = position.collateralAmount - 4e6;
