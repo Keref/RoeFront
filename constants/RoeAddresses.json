@@ -1,7 +1,7 @@
 {
   "42161": {
     "network": "Arbitrum",
-    "referrals": "0x6EE947E1eBB4dF794fBcbB0007523D2ca7d8c7fB",
+    "referrals": "0xf9ED3f91631aBb5735ea60d592129e157734589e",
     "strikeManager": "0x6B49C1EFC952494ad7d32Cd04f9A6d85354a650E",
     "oracle" : "0x4A9EB72b72cB6fBbD8eF8C83342f252e519559e9",
     "goodEntryCore": "0xdDeC418c1a825Ac09aD83cc1A28a2c5Bcd746050",
