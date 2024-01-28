@@ -93,7 +93,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
           isCall, 
           strikeX8.toString(), 
           notionalAmount,
-          21600 // 6h, time for streaming options
+          14400 // 6h, time for streaming options
         );
         //console.log('option price ', optionPriceX8.toString(), price)
         // optionPriceX8 is the price of 1 call or 1 put on the base, for 6h, so hourly funding in % is 100 * price / 6h
