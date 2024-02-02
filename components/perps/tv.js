@@ -21,7 +21,7 @@ export default function TradingViewWidget({width, height, symbol}) {
     "debug": false,
     "fullscreen": false,
     "symbol": symbol,
-    "interval": "60",
+    "interval": "15",
     "overrides": {
         "paneProperties.backgroundGradientStartColor": "red",
         "paneProperties.backgroundGradientEndColor": "red",
