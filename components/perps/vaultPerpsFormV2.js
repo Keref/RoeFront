@@ -36,9 +36,9 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
   const strikeContract = new ethers.Contract(strikeManagerAddress, StrikeManager_ABI, customProvider);
   const delay = (ms) => new Promise((res) => setTimeout(res, ms));
   
-  const [leverage, setLeverage] = useState(200)
+  const [leverage, setLeverage] = useState(420)
   const [sliderLevel, setSliderLevel] = useState(2)
-  const leverageGrid = [100, 200, 300, 420, 500, 600, 700, 800, 900, 1001];
+  const leverageGrid = [100, 420, 1001, 1500, 2000, 2500, 3000, 3500, 4200, 5000];
   
   const positionSize = collateralAmount * leverage;
   
@@ -229,7 +229,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
           />
           <div>
             <span style={{ fontWeight: "bold", }}>Payout Multiplier</span><br/>
-          { leverage >= 800 ? <img src="/images/sweatpepe.png"  style={{ float: 'right', height: 64, width: 64}} /> : <></>}
+          { leverage >= 4000 ? <img src="/images/sweatpepe.png"  style={{ float: 'right', height: 64, width: 64}} /> : <></>}
             <div  style={{display: 'flex', flexDirection: 'row', gap: 36}}>
               {/*Leverage: {parseFloat(collateralAmount) > 0 ? (positionSize / collateralAmount).toFixed(0)+"x" : <>&infin;</>}{" "}*/}
               <Input 
