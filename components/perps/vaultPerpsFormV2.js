@@ -38,7 +38,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
   
   const [leverage, setLeverage] = useState(420)
   const [sliderLevel, setSliderLevel] = useState(2)
-  const leverageGrid = [100, 420, 1001, 1500, 2000, 2500, 3000, 3500, 4200, 5000];
+  const leverageGrid = [100, 420, 1001, 1500, 2000, 2500, 3000, 3500, 4200, 5000, 6969];
   
   const positionSize = collateralAmount * leverage;
   
@@ -267,7 +267,7 @@ const VaultPerpsFormV2 = ({ vault, price, strikeManagerAddress, refresh, oiInfo 
             />*/}
             <Slider
               min={1}
-              max={10}
+              max={11}
               onChange={(val)=> setLeverageSlider(val)}
               tooltip={{ open: false}}
               value={sliderLevel}
